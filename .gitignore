@@ -1,8 +1,10 @@
+.DS_Store
+
 # Pickle files
-.p
+*.p
 
 # PDFs
-.pdf
+*.pdf
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

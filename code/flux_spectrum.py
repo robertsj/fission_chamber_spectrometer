@@ -49,11 +49,11 @@ class Flux() :
         self.c3 = self.c2 * self.f(self.e2) / self.chi(self.e2)
         
     def compute_ratio(self, e1):
-        A = quad(self.m, 0, e1)[0]
+        A = quad(self.m, 0, e1, limit=150)[0]
         C2 = self.m(e1) / self.f(e1)
         C3 = self.f(self.e2) / self.chi(self.e2)
         B = C2 * quad(self.f, e1, self.e2)[0]
-        C = C2 * C3 * quad(self.chi, self.e2, 2e7)[0]
+        C = C2 * C3 * quad(self.chi, self.e2, 2e7, limit=150)[0]
         r = A / (B + C)
         return r
         

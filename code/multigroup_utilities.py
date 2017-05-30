@@ -98,7 +98,12 @@ def energy_groups(structure='wims69', lower=None, upper=None, MeV=False) :
                          3.00000000e-02,   2.50000000e-02,   2.00000000e-02,
                          1.50000000e-02,   1.00000000e-02,   5.00000000e-03,
                          1.00000000e-05])
-                         
+    elif structure == 'tg1_0' :
+        """ 2-group with a 1.0 eV cutoff."""
+        eb = np.array([1.0e7, 1.0, 1e-5])
+    elif structure == 'tg0_625' :
+        """ 2-group with a 0.625 eV cutoff."""
+        eb = np.array([1.0e7, 0.625, 1e-5])                     
     elif structure == 'lwr32' :
         """ 32-group structure for LWR analysis
         
