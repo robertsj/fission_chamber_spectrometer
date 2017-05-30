@@ -1,3 +1,9 @@
+# Pickle files
+.p
+
+# PDFs
+.pdf
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
