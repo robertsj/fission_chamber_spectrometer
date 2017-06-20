@@ -25,9 +25,10 @@ def collapse(bounds, data, E=None) :
         data_mg[g] = quad(f, a, b)[0] / (b-a)
     return data_mg
 
-def plot_multigroup_data(eb, phi, scale="") :
+def plot_multigroup_data(eb_, phi_, scale="") :
     """ Return easily-plotted multigroup data given group values and bounds"""
-    
+    eb = 1*eb_
+    phi = 1*phi_
     def barchart(x, y) :
         X = np.zeros(2*len(y))
         Y = np.zeros(2*len(y))
@@ -46,6 +47,10 @@ def plot_multigroup_data(eb, phi, scale="") :
         phi[:] = phi[:] / del_e[:]
     elif scale == "e-to-group" :
         phi[:] = phi[:] * del_e[:]
+    elif scale == "group-to-u" :
+        # group flux must be divided by group bins
+        phi[:] =  phi[:] / del_e[:] * (eb[:-1]+eb[1:])/2
+        #print(eb[1:])
     e, phi = barchart(eb,  phi)
     return e, phi
     
