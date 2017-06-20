@@ -22,6 +22,8 @@ def get_cross_section_interps(isos) :
     return interps
     
 if __name__ == "__main__" :
+    from nice_plots import init_nice_plots
+    init_nice_plots()
     import matplotlib.pyplot as plt
     from master_data import isos, isos_str, isos_colors
     data = load_cross_sections(isos)
@@ -29,7 +31,11 @@ if __name__ == "__main__" :
     E = np.logspace(-5, np.log10(2e7), 1e5)
     for iso in  isos :
         plt.loglog(E, interps[iso](E), label=isos_str[iso], color=isos_colors[iso])
-    plt.legend()
+    plt.legend(loc=0, ncol=4)
+    plt.axis([1e-5, 1e7, 1e-11, 1e5])
+    plt.xlabel('E (eV)')
+    plt.ylabel('$\sigma_f$ (b)')
+    plt.savefig('fission_cross_sections.pdf')  
     plt.show()
     
     
