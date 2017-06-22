@@ -72,6 +72,24 @@ def unfold_min_norm(R, RF, isos) :
     y = A.T.dot(y)
     return y
 
+def unfold_tikhonov(R, RF, isos, alpha) :
+    """ Unfold using tikhonov regularization."""
+    A = sp.zeros((len(isos), len(RF['u235'])))
+    b = sp.zeros(len(isos))
+    k = 0
+    for iso in isos :
+        A[k, :] = RF[iso]
+        b[k] = R[iso]
+        k += 1
+    M = A.T.dot(A) + alpha**2*sp.eye(len(A.T))
+    print(M.shape)
+    #A = RF.dot(RF.transpose())
+    #w = sp.linalg.solve(A, R)
+   # Phi_g = RF.transpose().dot(w) 
+    y = sp.linalg.solve(M, A.T.dot(b))
+    #y = A.T.dot(y)
+    return y
+
 if __name__ == "__main__" :
     from flux_spectrum import Flux
     from master_data import isos
@@ -81,10 +99,16 @@ if __name__ == "__main__" :
     from nice_plots import init_nice_plots
     init_nice_plots()
     
+    
+    isos_cd = ['u233cd113', 'u235cd113', 'pu238cd113', 'pu239cd113', 'pu241cd113']
+    isos_gd = ['u233gd155', 'u235gd155', 'pu238gd155', 'pu239gd155', 'pu241gd155']
+  
+    
     struct = 'wims69'
     pwr = Flux(7.0, 600.0)
     name = 'test_wims69_resp.p'
-    resp = generate_responses(isos, pwr.evaluate, struct=struct, name=name, overwrite=False)
+    resp = generate_responses(isos+isos_cd+isos_gd, pwr.evaluate, 
+                              struct=struct, name=name, overwrite=True)
     R = integral_response(name)
     RF = resp['response']
 
@@ -98,6 +122,11 @@ if __name__ == "__main__" :
               'pu238','pu239','pu240','pu241','pu242']
     isos_4 = isos
     
+
+    isos_5 = isos_3 + isos_cd
+    isos_6 = isos_3 + isos_gd
+    isos_7 = isos_3 + isos_cd + isos_gd
+    
     #y3 = unfold(R, RF, isos=['u235','u238','th232'])
     phi_3 = unfold(R, RF, isos=isos_1)
     phi_5 = unfold(R, RF, isos=isos_2)
@@ -107,6 +136,12 @@ if __name__ == "__main__" :
     phi_15_phi2_0 = unfold(R, RF, isos=isos_4, tot=2.0)
     phi_3_min_norm = unfold_min_norm(R, RF, isos=isos_1)
     phi_15_min_norm = unfold_min_norm(R, RF, isos=isos_4)
+    phi_15_tik_0_1 = unfold_tikhonov(R, RF, isos=isos_4, alpha=0.1)
+    phi_15_tik_1_0 = unfold_tikhonov(R, RF, isos=isos_4, alpha=0.01)
+    
+    phi_cd =  unfold(R, RF, isos=isos_5, tot=1.0)
+    phi_gd =  unfold(R, RF, isos=isos_6, tot=1.0)
+    phi_cdgd =  unfold(R, RF, isos=isos_7, tot=1.0)
     
     x,yr = plot_multigroup_data(eb, phi_ref, 'group-to-e')
     x,ur = plot_multigroup_data(eb, phi_ref, 'group-to-u')
@@ -123,19 +158,31 @@ if __name__ == "__main__" :
     x,u3_mn = plot_multigroup_data(eb, phi_3_min_norm, 'group-to-u')    
     x,y15_mn = plot_multigroup_data(eb, phi_15_min_norm, 'group-to-e')
     x,u15_mn = plot_multigroup_data(eb, phi_15_min_norm, 'group-to-u')
-
+    x,y15_ti_0_1 = plot_multigroup_data(eb, phi_15_tik_0_1, 'group-to-e')
+    x,u15_ti_0_1 = plot_multigroup_data(eb, phi_15_tik_0_1, 'group-to-u')
+    x,y15_ti_1_0 = plot_multigroup_data(eb, phi_15_tik_1_0, 'group-to-e')
+    x,u15_ti_1_0 = plot_multigroup_data(eb, phi_15_tik_1_0, 'group-to-u')
+    
+    x,ycd = plot_multigroup_data(eb, phi_cd, 'group-to-e')
+    x,ucd = plot_multigroup_data(eb, phi_cd, 'group-to-u') 
+    x,ygd = plot_multigroup_data(eb, phi_gd, 'group-to-e')
+    x,ugd = plot_multigroup_data(eb, phi_gd, 'group-to-u') 
+    x,ycdgd = plot_multigroup_data(eb, phi_cdgd, 'group-to-e')
+    x,ucdgd = plot_multigroup_data(eb, phi_cdgd, 'group-to-u') 
+    
     """ Reconstructed flux spectra for sum(phi) = 1 and several sets of nuclides """
-    plt.figure(1)
+    plt.figure(1)#, figsize=(12, 7))
     plt.loglog(x, yr, 'k', x, y3, 'b--', x, y5, 'g-.', x, y11, 'r:', x, y15, 'c--')
     plt.xlabel('$E$ (eV)')
     plt.ylabel('$\phi(E)$')
     plt.legend(['reference', 'case 1', 'case 2', 'case 3', 'case 4'], loc=0)
+    #plt.grid(True, alpha=0.5)
     plt.savefig('reconstructed_flux.pdf')
     
     """ Reconstructed flux spectra per unit lethargy """
     plt.figure(2)
     plt.loglog(x, ur, 'k', x, u3, 'b--', x, u5, 'g-.', x, u11, 'r:', x, u15, 'c--')
-    plt.legend('$E$ (eV)')
+    plt.xlabel('$E$ (eV)')
     plt.ylabel('$E \phi(E)$')
     plt.legend(['reference', 'case 1', 'case 2', 'case 3', 'case 4'], loc=0)
     plt.savefig('reconstructed_flux_lethargy.pdf')
@@ -162,6 +209,7 @@ if __name__ == "__main__" :
                 'case 2 (%.1f)' % err5, 
                 'case 3 (%.1f)' % err11,  
                 'case 4 (%.1f)' % err15], loc=0)
+    plt.xlabel('g')
     plt.savefig('groupwise_error.pdf')
 
     """ Group-wise, relative error zoomed"""    
@@ -175,6 +223,7 @@ if __name__ == "__main__" :
                 'case 3 (%.1f)' % err11,  
                 'case 4 (%.1f)' % err15], loc=0)
     plt.axis([0, 70, 0, 100])
+    plt.xlabel('g')
     plt.savefig('groupwise_error_zoomed.pdf')
     
 
@@ -187,17 +236,55 @@ if __name__ == "__main__" :
     plt.plot(range(1, 1+len(phi_5)), 100*abs(phi_15-phi_ref)/phi_ref, 'b--s',
              range(1, 1+len(phi_5)), 100*abs(phi_15_phi0_5-phi_ref)/phi_ref, 'g-.o',
              range(1, 1+len(phi_5)), 100*abs(phi_15_phi2_0-phi_ref)/phi_ref, 'r:*')
-    plt.legend(['$\sum \phi = 1.0$ (%.1f)' % err1_0, 
-                '$\sum \phi = 0.5$ (%.1f)' % err0_5, 
-                '$\sum \phi = 2.0$ (%.1f)' % err2_0], loc=0)
+    plt.legend(['$\phi_{\text{tot}} = 1.0$ (%.1f)' % err1_0, 
+                '$\phi_{\text{tot}} = 0.5$ (%.1f)' % err0_5, 
+                '$\phi_{\text{tot}} = 2.0$ (%.1f)' % err2_0], loc=0)
     plt.savefig('different_total_fluxes.pdf')
     #wplt.axis([0, 70, 0, 200])
     
    
     plt.figure(6)
-    plt.title("Fluxes")
-    plt.loglog(x, yr, 'k', x, y15, 'r:', x, y15_mn, 'c--')# x, y_11_phi1_5, 'g-.', x, y_11_phi2_0, 'r:')
-   # plt.legend(['ref', '1.0', '1.5', '2.0'])
+    err_me = sp.mean(100*abs(phi_15-phi_ref)/phi_ref)
+    err_mr = sp.mean(100*abs(phi_15_min_norm-phi_ref)/phi_ref)
+    err_ti_0_1 = sp.mean(100*abs(phi_15_tik_0_1-phi_ref)/phi_ref)
+    err_ti_1_0 = sp.mean(100*abs(phi_15_tik_1_0-phi_ref)/phi_ref)
+    plt.loglog(x, yr, 'k', x, y15, 'r:', x, y15_mn, 'c--',x, y15_ti_0_1, 'b-.',x, y15_ti_1_0, 'g--')
+    plt.legend(['reference', 
+                'max. entropy (%.1f)' % err_me, 
+                'min. norm (%.1f)' % err_mr,
+                'Tik. 0.1 (%.1f)' % err_ti_0_1,
+                'Tik. 0.01 (%.1f)' % err_ti_1_0], loc=0)
+    plt.xlabel('$E$ (eV)')
+    plt.ylabel('$\phi(E)$')
+    plt.savefig('maxent_vs_minnorm.pdf')
+    
+    plt.figure(7)
+    err_cd = sp.mean(100*abs(phi_cd-phi_ref)/phi_ref)
+    err_gd= sp.mean(100*abs(phi_gd-phi_ref)/phi_ref)
+    err_cdgd = sp.mean(100*abs(phi_cdgd-phi_ref)/phi_ref)
+    plt.loglog(x, yr, 'k', x, y11, 'r:', x, ycd, 'c--',x, ygd, 'b-.',x, ycdgd, 'g--')
+    plt.legend(['reference', 
+                'case 3 (%.1f)' % err11, 
+                'case 3 + Cd  (%.1f)' % err_cd,
+                'case 3 + Gd  (%.1f) ' % err_gd, 
+                'case 3 + Cd + Gd  (%.1f)' % err_cdgd],            loc=0)
+    plt.xlabel('$E$ (eV)')
+    plt.ylabel('$\phi(E)$')
+    plt.savefig('filtered_unfold.pdf')
+    
+    plt.figure(8)
+    plt.semilogy(x, yr, 'k', x, y11, 'r:', x, ycd, 'c--',x, ygd, 'b-.',x, ycdgd, 'g--')
+    plt.legend(['reference', 
+                'case 3 (%.1f)' % err11, 
+                'case 3 + Cd  (%.1f)' % err_cd,
+                'case 3 + Gd  (%.1f) ' % err_gd, 
+                'case 3 + Cd + Gd  (%.1f)' % err_cdgd],            loc=0)
+    plt.xlabel('$E$ (eV)')
+    plt.ylabel('$\phi(E)$')
+    plt.axis([0.5,2,1e-4,1e1])
+    plt.savefig('filtered_unfold_zoom.pdf')
+    
+    
     
     """ Conclusion: we don't need to have exact total flux, but we do need to
         normalize it to something reasonable as part of the constraints.

@@ -78,7 +78,7 @@
     \begin{frame}{Fundamental Question}
        \begin{center}
          {\bf\Large Can we unfold a reactor flux spectrum using only a 
-         finite set of of in-core, fission-detector responses?}
+         finite set of in-core, fission-detector responses?}
        \end{center}
     \end{frame}
     
@@ -115,7 +115,7 @@
         \end{columns}
     \end{frame}
     
-    \begin{frame}{Fission Cross Sections}
+    \begin{frame}{Fission Cross Sections (data from http://www.nndc.bnl.gov)}
          \begin{center}
              \includegraphics[totalheight=.8\textheight]{../code/fission_cross_sections.pdf}
          \end{center}
@@ -156,13 +156,14 @@
       \vfill
       Some options: 
       \begin{itemize}
-       \item Minimum norm \\
+       \item {\bf Minimum norm} \\
              $\bm{\phi} =  \bm{\Sigma}  [\bm{\Sigma} \bm{\Sigma}^T]^{-1}\mathbf{r}$
-       \item Tikhonov (and other) regularization \\
-             $\bm{\phi} = [\bm{\Sigma}^T \bm{\Sigma}+ \mathbf{T}^T \mathbf{T}]^{-1} \bm{\Sigma} \mathbf{r}$
-       \item Maximum entropy methods
+       \item {\bf Tikhonov} (and other) {\bf regularization} \\
+             $\bm{\phi} = [\bm{\Sigma}^T \bm{\Sigma}+ \mathbf{T}^T \mathbf{T}]^{-1} \bm{\Sigma} \mathbf{r}$ (usually $\mathbf{T} = a\mathbf{I}$)
+       \item {\bf Maximum entropy} methods
              $\operatorname*{arg\,max}_{\bm{\phi}} S(\bm{\phi}) = 
-                \operatorname*{arg\,max}_{\bm{\phi}} \left [ -\sum^G_{g=1} \phi_g \ln(\phi_g) \right ]$
+                \operatorname*{arg\,max}_{\bm{\phi}} \left [ -\sum^G_{g=1} \phi_g \ln(\phi_g) \right ]$ \\
+             (variants exist that incorporate prior spectrum + uncertainties)
       \end{itemize}
     \end{frame}
     
@@ -173,6 +174,12 @@
              \includegraphics[totalheight=.7\textheight]{../code/test_spectrum.pdf}
          \end{center}
          Comments: WIMS 69-group format; fast-to-thermal ratio of 4.
+    \end{frame}
+    
+    \begin{frame}{Multigroup Response Functions}
+         \begin{center}
+             \includegraphics[totalheight=.85\textheight]{../code/fission_responses.pdf}
+         \end{center}
     \end{frame}
 
     \begin{frame}
@@ -209,6 +216,16 @@
         
     \end{frame}
     
+    \begin{frame}{Some Numerical Details}
+     \begin{itemize}
+      \item Maximum entropy unfolding based on Sequential Least SQuares Programming
+            as implemented in SciPy
+      \item All responses, etc., integrated using good old trapezoid rule 
+     \end{itemize}
+
+    \end{frame}
+
+    
     
     \begin{frame}{Cases Considered}
       \begin{itemize}
@@ -221,8 +238,12 @@
                     ${}^{244}$Cm, ${}^{245}$Cm 
         \begin{itemize}
           \item Vary total flux for maximum entropy unfolding
-          \item Compare maximum entropy to minimum norm
+          \item Compare maximum entropy to minimum norm and Tikhonov
         \end{itemize}
+      \pause
+      \item \textcolor{red}{Case 5: Case 3 + Cd filters}
+      \item \textcolor{red}{Case 6: Case 3 + Gd filters}
+      \item \textcolor{red}{Case 7: Case 3 + Cd and Gd filters}
       \end{itemize}
     \end{frame}
     
@@ -244,70 +265,94 @@
          \end{center}
     \end{frame}
     
-    \begin{frame}{Group-Wise, Relative Errors  Errors (Zoomed)}
+    \begin{frame}{Group-Wise, Relative Errors (\%, Zoomed)}
          \begin{center}
              \includegraphics[totalheight=.85\textheight]{../code/groupwise_error_zoomed.pdf}
          \end{center}
     \end{frame}
     
-    \begin{frame}{Impact of Total Flux Normalization}
+    \begin{frame}{Impact of Total Flux Normalization (Errors, \%)}
          \begin{center}
              \includegraphics[totalheight=.85\textheight]{../code/different_total_fluxes.pdf}
          \end{center}
     \end{frame}
 
-    \begin{frame}
-        \frametitle{Frame with Blocks}
-        \begin{block}{The Karhunen Lo\'{e}ve Transform :}
-            \begin{itemize}
-                \item Shows improvement over mDLP
-                \item Reduces DOF needed for accurate results
-                \item Generally improves with increased information
-                \item Achieves sub $0.1\%$ error with $<1/10$ DOF
-            \end{itemize}
-        \end{block}
-        \begin{block}{Future Work}
-            \begin{itemize}
-                \item Expanding to 2D
-                \item KLT on spatial variable
-                \item Test basis functions using 1 group of snapshots
-            \end{itemize}
-        \end{block}
-        \begin{block}{Contact Information}
-            \begin{itemize}
-                \item Your Name: Your email
-                \item Dr. Jeremy Roberts: jaroberts@k-state.edu
-            \end{itemize}
-        \end{block}
-        
-        % This line allows a reference slide without citing references
-        \nocite{*}
-    \end{frame}
+    \begin{frame}{Maximum Entropy vs. Minimum Norm and Tikhonov}
+         \begin{center}
+             \includegraphics[totalheight=.85\textheight]{../code/maxent_vs_minnorm.pdf}
+         \end{center}
+    \end{frame}  
     
+    \begin{frame}{Impact of 0.025 mm Cd Filter on Response Functions}
+         \begin{center}
+             \includegraphics[totalheight=.75\textheight]{../code/filtered_responses_cd.pdf}
+         \end{center}
+    \end{frame}  
+    
+    
+    \begin{frame}{Impact of 0.025 mm Gd Filter on Response Functions}
+         \begin{center}
+             \includegraphics[totalheight=.75\textheight]{../code/filtered_responses_gd.pdf}
+         \end{center}
+    \end{frame}  
+    
+    
+    \begin{frame}{Case 3 With and Without Filters}
+         \begin{center}
+             \includegraphics[totalheight=.85\textheight]{../code/filtered_unfold.pdf}
+         \end{center}
+    \end{frame}  
+    
+    \begin{frame}{Case 3 With and Without Filters (Zoomed)}
+         \begin{center}
+             \includegraphics[totalheight=.85\textheight]{../code/filtered_unfold_zoom.pdf}
+         \end{center}
+    \end{frame}  
+    
+    \section{Conclusions}
+    
+    \begin{frame}{The Answer}
+       \begin{center}
+         {\bf\Large Can we unfold a reactor flux spectrum using only a 
+         finite set of in-core, fission-detector responses?}
+       \end{center}
+       \vfill 
+       \pause
+       {\bf\Large Yes, to a degree.}
+       \begin{itemize}
+        \pause
+        \item Need Th, U, and Pu to achieve sub-100\%, average, group-wise error
+        \pause
+        \item Including Am and Cm improves things somewhat
+        \pause
+        \item Thermal-neutron filtering reduces by half the group-wise error
+       \end{itemize}
 
-    
-    \section{Results}
-    
-    
-    \section{References}
-    
-    \begin{frame}[t,allowframebreaks]\label{lastframe}
-        \frametitle{References}
-        \bibliographystyle{ans}
-        % make a bibliography.bib file with your references in it
-        \bibliography{roberts_animma}
     \end{frame}
     
-    \beginbackup % begins the non-numbered slides
-    
-    \begin{frame}[noframenumbering]
-        \frametitle{no frame number slide}
-        \begin{center}
-            Some words and test figure
-            %\includegraphics[trim=.1cm .25cm 2.0cm .4cm, clip=true, totalheight=.8\textheight]{sample_figure}
-        \end{center}
+        
+    \begin{frame}{Moving Forward...}
+       ...it would be worth considering:
+       \begin{itemize}
+        \pause
+        \item Advanced unfolding techniques that incorporate prior information (spectrum guess)
+              and response uncertainties (counting, mass, composition, etc.)
+        \pause
+        \item More detailed study of how important each isotope is (e.g., of X responses, which Y would be best?)
+        \pause
+        \item More detailed study of filters (this was a hotel-room study)
+        \pause 
+        \item A sanity check regarding whether any of this is actually doable in practice
+       \end{itemize}
+       \vfill 
+       \pause 
+       \begin{center}
+        {\bf Thanks!  Questions? \\
+        jaroberts@ksu.edu}
+       \end{center}
+
+
     \end{frame}
-    
-    \backupend % Ends the non-numbered slides
+   % \backupend % Ends the non-numbered slides
     
 \end{document}

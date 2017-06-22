@@ -35,12 +35,21 @@ def generate_responses(isos, flux, struct='wims69', lower=1e-5, upper=2e7,
     return responses
     
 if __name__ == "__main__" :
-    from master_data import isos
+    from master_data import isos, isos_str, isos_colors
     from flux_spectrum import Flux
     from multigroup_utilities import plot_multigroup_data
+    from nice_plots import init_nice_plots
+    init_nice_plots()
+    import matplotlib.pyplot as plt
     struct = 'wims69'
     phi = Flux(7.0, 600.0)
     resp = generate_responses(isos, phi.evaluate, name='test_resp.p', overwrite=True)
     for iso in isos:
-        x, y = plot_multigroup_data(resp['eb'], resp['response'][iso])
-        plt.loglog(x, y, ls='-')
+        x, y = plot_multigroup_data(resp['eb'], resp['response'][iso] )
+        plt.loglog(x, y, ls='-',  label=isos_str[iso], color=isos_colors[iso])
+    plt.legend(loc=0, ncol=4)
+    plt.axis([1e-5, 1e7, 1e-11, 1e5])
+    plt.xlabel('E (eV)')
+    plt.ylabel('$\sigma_f$ (b)')
+    plt.savefig('fission_responses.pdf')  
+    plt.show()

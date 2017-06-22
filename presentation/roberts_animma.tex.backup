@@ -115,7 +115,7 @@
         \end{columns}
     \end{frame}
     
-    \begin{frame}{Fission Cross Sections}
+    \begin{frame}{Fission Cross Sections (data from http://www.nndc.bnl.gov)}
          \begin{center}
              \includegraphics[totalheight=.8\textheight]{../code/fission_cross_sections.pdf}
          \end{center}
@@ -156,13 +156,14 @@
       \vfill
       Some options: 
       \begin{itemize}
-       \item Minimum norm \\
+       \item {\bf Minimum norm} \\
              $\bm{\phi} =  \bm{\Sigma}  [\bm{\Sigma} \bm{\Sigma}^T]^{-1}\mathbf{r}$
-       \item Tikhonov (and other) regularization \\
-             $\bm{\phi} = [\bm{\Sigma}^T \bm{\Sigma}+ \mathbf{T}^T \mathbf{T}]^{-1} \bm{\Sigma} \mathbf{r}$
-       \item Maximum entropy methods
+       \item {\bf Tikhonov} (and other) {\bf regularization} \\
+             $\bm{\phi} = [\bm{\Sigma}^T \bm{\Sigma}+ \mathbf{T}^T \mathbf{T}]^{-1} \bm{\Sigma} \mathbf{r}$ (usually $\mathbf{T} = a\mathbf{I}$)
+       \item {\bf Maximum entropy} methods
              $\operatorname*{arg\,max}_{\bm{\phi}} S(\bm{\phi}) = 
-                \operatorname*{arg\,max}_{\bm{\phi}} \left [ -\sum^G_{g=1} \phi_g \ln(\phi_g) \right ]$
+                \operatorname*{arg\,max}_{\bm{\phi}} \left [ -\sum^G_{g=1} \phi_g \ln(\phi_g) \right ]$ \\
+             (variants exist that incorporate prior spectrum + uncertainties)
       \end{itemize}
     \end{frame}
     
@@ -173,6 +174,12 @@
              \includegraphics[totalheight=.7\textheight]{../code/test_spectrum.pdf}
          \end{center}
          Comments: WIMS 69-group format; fast-to-thermal ratio of 4.
+    \end{frame}
+    
+    \begin{frame}{Multigroup Response Functions}
+         \begin{center}
+             \includegraphics[totalheight=.85\textheight]{../code/fission_responses.pdf}
+         \end{center}
     \end{frame}
 
     \begin{frame}
@@ -186,17 +193,21 @@
                 \hline
  ${}^{242m}$Am & 1048.7593 &  4962.9134 &  77.7631\\
  ${}^{245}$Cm & 264.1680 &  1133.7858 &  48.4394\\
+ \hline
  ${}^{241}$Pu & 192.7684 &  831.6396 &  34.2817\\
  ${}^{239}$Pu & 179.4585 &  836.1174 &  16.5591\\
  ${}^{233}$U & 106.3772 &  350.3835 &  45.8458\\
  ${}^{235}$U & 85.0867 &  364.1355 &  15.8622\\
+ \hline
  ${}^{238}$Pu & 3.1949 &  9.4636 &  1.6398\\
  ${}^{241}$Am & 1.4032 &  4.3195 &  0.6798\\
  ${}^{244}$Cm & 0.7441 &  0.6619 &  0.7645\\
+ \hline
  ${}^{240}$Pu & 0.3451 &  0.0498 &  0.4183\\
  ${}^{237}$Np & 0.2358 &  0.0146 &  0.2906\\
  ${}^{234}$U & 0.2256 &  0.0423 &  0.2711\\
  ${}^{242}$Pu & 0.1836 &  0.0090 &  0.2270\\
+ \hline
  ${}^{238}$U & 0.0426 &  0.0000 &  0.0532\\
  ${}^{232}$Th & 0.0104 &  0.0000 &  0.0130\\
                 \bottomrule
@@ -219,6 +230,9 @@
           \item Vary total flux for maximum entropy unfolding
           \item Compare maximum entropy to minimum norm
         \end{itemize}
+      \item \textcolor{red}{Case 5: Case 3 + Cd filters}
+      \item \textcolor{red}{Case 6: Case 3 + Gd filters}
+      \item \textcolor{red}{Case 7: Case 3 + Cd and Gd filters}
       \end{itemize}
     \end{frame}
     
@@ -240,70 +254,65 @@
          \end{center}
     \end{frame}
     
-    \begin{frame}{Group-Wise, Relative Errors  Errors (Zoomed)}
+    \begin{frame}{Group-Wise, Relative Errors (\%, Zoomed)}
          \begin{center}
              \includegraphics[totalheight=.85\textheight]{../code/groupwise_error_zoomed.pdf}
          \end{center}
     \end{frame}
     
-    \begin{frame}{Impact of Total Flux Normalization}
+    \begin{frame}{Impact of Total Flux Normalization (Errors, \%)}
          \begin{center}
              \includegraphics[totalheight=.85\textheight]{../code/different_total_fluxes.pdf}
          \end{center}
     \end{frame}
 
-    \begin{frame}
-        \frametitle{Frame with Blocks}
-        \begin{block}{The Karhunen Lo\'{e}ve Transform :}
-            \begin{itemize}
-                \item Shows improvement over mDLP
-                \item Reduces DOF needed for accurate results
-                \item Generally improves with increased information
-                \item Achieves sub $0.1\%$ error with $<1/10$ DOF
-            \end{itemize}
-        \end{block}
-        \begin{block}{Future Work}
-            \begin{itemize}
-                \item Expanding to 2D
-                \item KLT on spatial variable
-                \item Test basis functions using 1 group of snapshots
-            \end{itemize}
-        \end{block}
-        \begin{block}{Contact Information}
-            \begin{itemize}
-                \item Your Name: Your email
-                \item Dr. Jeremy Roberts: jaroberts@k-state.edu
-            \end{itemize}
-        \end{block}
-        
-        % This line allows a reference slide without citing references
-        \nocite{*}
+    \begin{frame}{Maximum Entropy vs. Minimum Norm and Tikhonov}
+         \begin{center}
+             \includegraphics[totalheight=.85\textheight]{../code/maxent_vs_minnorm.pdf}
+         \end{center}
+    \end{frame}  
+    
+    \begin{frame}{Impact of 0.025 mm Cd Filter on Response Functions}
+         \begin{center}
+             \includegraphics[totalheight=.75\textheight]{../code/filtered_responses_cd.pdf}
+         \end{center}
+    \end{frame}  
+    
+    
+    \begin{frame}{Impact of 0.025 mm Gd Filter on Response Functions}
+         \begin{center}
+             \includegraphics[totalheight=.75\textheight]{../code/filtered_responses_gd.pdf}
+         \end{center}
+    \end{frame}  
+    
+    
+    \begin{frame}{Case 3 With and Without Filters}
+         \begin{center}
+             \includegraphics[totalheight=.85\textheight]{../code/filtered_unfold.pdf}
+         \end{center}
+    \end{frame}  
+    
+    \begin{frame}{Case 3 With and Without Filters (Zoomed)}
+         \begin{center}
+             \includegraphics[totalheight=.85\textheight]{../code/filtered_unfold_zoom.pdf}
+         \end{center}
+    \end{frame}  
+    
+    \section{Conclusions}
+    
+    \begin{frame}{The Answer}
+       \begin{center}
+         {\bf\Large Can we unfold a reactor flux spectrum using only a 
+         finite set of of in-core, fission-detector responses?}
+       \end{center}
+       \vfill 
+       \pause
+       \begin{center}
+         {\bf\Large Yes, to a degree.}
+       \end{center}
     \end{frame}
     
-
     
-    \section{Results}
-    
-    
-    \section{References}
-    
-    \begin{frame}[t,allowframebreaks]\label{lastframe}
-        \frametitle{References}
-        \bibliographystyle{ans}
-        % make a bibliography.bib file with your references in it
-        \bibliography{roberts_animma}
-    \end{frame}
-    
-    \beginbackup % begins the non-numbered slides
-    
-    \begin{frame}[noframenumbering]
-        \frametitle{no frame number slide}
-        \begin{center}
-            Some words and test figure
-            %\includegraphics[trim=.1cm .25cm 2.0cm .4cm, clip=true, totalheight=.8\textheight]{sample_figure}
-        \end{center}
-    \end{frame}
-    
-    \backupend % Ends the non-numbered slides
+   % \backupend % Ends the non-numbered slides
     
 \end{document}

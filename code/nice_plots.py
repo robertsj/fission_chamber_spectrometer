@@ -2,7 +2,7 @@ def init_nice_plots() :
     """ Some things to make plots that Roberts seems to like.
     """
     from matplotlib import rc
-    rc('font',**{'family':'serif'})
+    #rc('font',**{'family':'serif'})
     from matplotlib import rcParams
     rcParams['xtick.direction'] = 'out'
     rcParams['ytick.direction'] = 'out'

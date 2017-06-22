@@ -99,7 +99,7 @@ if __name__ == "__main__" :
     # _, triga_mg_pul = plot_multigroup_data(bounds, triga_mg_pul) 
     
     plt.figure(1)
-    plt.loglog(E, phi_pwr/tot, 'k', E_mg, phi_mg/tot, 'k--')
+    plt.loglog(E, phi_pwr/tot, 'k', E_mg, phi_mg/tot, 'r--')
     #plt.axis([1e-5, 1e7, 1e-12, 1e1])
     plt.xlabel('$E$ (eV)')
     plt.ylabel('$\phi(E)$')
