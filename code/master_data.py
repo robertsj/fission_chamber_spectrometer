@@ -1,3 +1,6 @@
+directory = '/home/robertsj/Research/fission_chamber_spectrometer'
+img_directory = directory + '/img/'
+
 isos = ['th232',
         'u233','u234','u235','u238',
         'np237',

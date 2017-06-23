@@ -2,7 +2,9 @@
 
 import matplotlib.pyplot as plt
 import numpy as np
-from master_data import isos_str
+from master_data import isos_str, directory, img_directory
+
+
 
 isos_colors = {'u233': 'b', 'u235': 'r', 'pu238': 'g', 'pu239': 'c', 'pu241': 'm'}
 
@@ -28,7 +30,7 @@ filt['au197']['thick'] = 0.05
 plt.figure(1)
 for iso in ['cd113', 'gd155', 'au197'] :
     # Load in the filter data
-     E, sig = np.loadtxt('../data/'+iso+'.txt', skiprows=1, 
+     E, sig = np.loadtxt(directory+'/data/'+iso+'.txt', skiprows=1, 
                             delimiter=',', unpack=True) 
      filt[iso]['value'] = sig
      filt[iso]['E'] = E
@@ -36,12 +38,12 @@ for iso in ['cd113', 'gd155', 'au197'] :
 plt.xlabel('$E$ (eV)')
 plt.ylabel('$\sigma_{\gamma}(E)$ (b)')
 #plt.axis([1e-5, 1e7, 1e-6, 1e1])
-plt.savefig('thermal_filters.pdf')
+plt.savefig(img_directory+'thermal_filters.pdf')
 
 plt.figure(2)
 for iso in isos_th :
     # Load in the filter data
-    E, sig = np.loadtxt('../data/'+iso+'.txt', skiprows=1, 
+    E, sig = np.loadtxt(directory+'/data/'+iso+'.txt', skiprows=1, 
                         delimiter=',', unpack=True) 
     EE = np.logspace(-5, np.log10(2e7), 1e4)
     isof = 'cd113'
@@ -50,17 +52,17 @@ for iso in isos_th :
                    np.exp(coef*np.interp(EE, filt[isof]['E'], filt[isof]['value']))
     plt.loglog(E, sig, label=isos_str[iso], color=isos_colors[iso],alpha=0.5)          
     plt.loglog(EE, sig_filt, label=isos_str[iso]+isos_str[isof], color=isos_colors[iso],ls='--')
-    np.savetxt('../data/'+iso+isof+'.txt', np.array([EE, sig_filt]).T, delimiter=',', header=iso+isof)
+    np.savetxt(directory+'/data/'+iso+isof+'.txt', np.array([EE, sig_filt]).T, delimiter=',', header=iso+isof)
 plt.xlabel('$E$ (eV)')
 plt.ylabel('$\sigma_{\gamma}(E)$ (b)')
 plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 plt.axis([1e-5, 1e7, 1e-6, 1e6])
-plt.savefig('filtered_responses_cd.pdf', bbox_inches='tight')
+plt.savefig(img_directory+'filtered_responses_cd.pdf', bbox_inches='tight')
 
 plt.figure(3)
 for iso in isos_th :
     # Load in the filter data
-    E, sig = np.loadtxt('../data/'+iso+'.txt', skiprows=1, 
+    E, sig = np.loadtxt(directory+'/data/'+iso+'.txt', skiprows=1, 
                         delimiter=',', unpack=True) 
     EE = np.logspace(-5, np.log10(2e7), 1e4)
     isof = 'gd155'
@@ -69,9 +71,9 @@ for iso in isos_th :
                    np.exp(coef*np.interp(EE, filt[isof]['E'], filt[isof]['value']))
     plt.loglog(E, sig, label=isos_str[iso], color=isos_colors[iso],alpha=0.5)          
     plt.loglog(EE, sig_filt, label=isos_str[iso]+isos_str[isof], color=isos_colors[iso],ls='--')
-    np.savetxt('../data/'+iso+isof+'.txt', np.array([EE, sig_filt]).T, delimiter=',', header=iso+isof)
+    np.savetxt(directory+'/data/'+iso+isof+'.txt', np.array([EE, sig_filt]).T, delimiter=',', header=iso+isof)
 plt.xlabel('$E$ (eV)')
 plt.ylabel('$\sigma_{\gamma}(E)$ (b)')
 plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 plt.axis([1e-5, 1e7, 1e-6, 1e6])
-plt.savefig('filtered_responses_gd.pdf', bbox_inches='tight')
+plt.savefig(img_directory+'filtered_responses_gd.pdf', bbox_inches='tight')

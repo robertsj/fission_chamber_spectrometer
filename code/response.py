@@ -5,12 +5,14 @@ import scipy as sp
 import os
 import pickle
 
+from master_data import directory
+
 def generate_responses(isos, flux, struct='wims69', lower=1e-5, upper=2e7, 
                        name='response.p', overwrite=False) :
     """This generates response functions for given isotopes,
      a given spectrum, and a desired group structure."""
     if os.path.isfile(name) and not overwrite :
-        return pickle.load(open(name, 'rb')) 
+        return pickle.load(open(directory+'/code/'+name, 'rb')) 
     responses = {}
     eb = energy_groups(struct, lower, upper)
     responses['eb'] = eb
@@ -31,11 +33,11 @@ def generate_responses(isos, flux, struct='wims69', lower=1e-5, upper=2e7,
             E = sp.logspace(sp.log10(eb[i+1]), sp.log10(eb[i]), 1e4)
             top = trapz(fun(E), E)
             responses['response'][iso][i] = top/responses['phi'][i]
-    pickle.dump(responses, open(name, 'wb'))
+    pickle.dump(responses, open(directory+'/code/'+name, 'wb'))
     return responses
     
 if __name__ == "__main__" :
-    from master_data import isos, isos_str, isos_colors
+    from master_data import isos, isos_str, isos_colors, img_directory
     from flux_spectrum import Flux
     from multigroup_utilities import plot_multigroup_data
     from nice_plots import init_nice_plots
@@ -51,5 +53,5 @@ if __name__ == "__main__" :
     plt.axis([1e-5, 1e7, 1e-11, 1e5])
     plt.xlabel('E (eV)')
     plt.ylabel('$\sigma_f$ (b)')
-    plt.savefig('fission_responses.pdf')  
-    plt.show()
+    plt.savefig(img_directory+'fission_responses.pdf')  
+    #plt.show()

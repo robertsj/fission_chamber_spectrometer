@@ -1,0 +1,3 @@
+cd presentation
+pdflatex roberts_animma.tex
+pdflatex roberts_animma.tex

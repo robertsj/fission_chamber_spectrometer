@@ -1,9 +1,10 @@
 import pickle
 import scipy as sp
 from scipy.optimize import fmin_cobyla, minimize
+from master_data import directory
 
 def integral_response(name):
-    response = pickle.load(open(name, 'rb'))
+    response = pickle.load(open(directory+'/code/'+name, 'rb'))
     phi = response['phi']
     phi = phi / sum(phi) 
     R = {}
@@ -92,7 +93,7 @@ def unfold_tikhonov(R, RF, isos, alpha) :
 
 if __name__ == "__main__" :
     from flux_spectrum import Flux
-    from master_data import isos
+    from master_data import isos, img_directory
     from response import generate_responses
     from multigroup_utilities import energy_groups, plot_multigroup_data
     import matplotlib.pyplot as plt
@@ -177,7 +178,7 @@ if __name__ == "__main__" :
     plt.ylabel('$\phi(E)$')
     plt.legend(['reference', 'case 1', 'case 2', 'case 3', 'case 4'], loc=0)
     #plt.grid(True, alpha=0.5)
-    plt.savefig('reconstructed_flux.pdf')
+    plt.savefig(img_directory+'reconstructed_flux.pdf')
     
     """ Reconstructed flux spectra per unit lethargy """
     plt.figure(2)
@@ -185,7 +186,7 @@ if __name__ == "__main__" :
     plt.xlabel('$E$ (eV)')
     plt.ylabel('$E \phi(E)$')
     plt.legend(['reference', 'case 1', 'case 2', 'case 3', 'case 4'], loc=0)
-    plt.savefig('reconstructed_flux_lethargy.pdf')
+    plt.savefig(img_directory+'reconstructed_flux_lethargy.pdf')
     
 
     """ Group-wise, relative error """   
@@ -210,7 +211,7 @@ if __name__ == "__main__" :
                 'case 3 (%.1f)' % err11,  
                 'case 4 (%.1f)' % err15], loc=0)
     plt.xlabel('g')
-    plt.savefig('groupwise_error.pdf')
+    plt.savefig(img_directory+'groupwise_error.pdf')
 
     """ Group-wise, relative error zoomed"""    
     plt.figure(4)
@@ -224,7 +225,7 @@ if __name__ == "__main__" :
                 'case 4 (%.1f)' % err15], loc=0)
     plt.axis([0, 70, 0, 100])
     plt.xlabel('g')
-    plt.savefig('groupwise_error_zoomed.pdf')
+    plt.savefig(img_directory+'groupwise_error_zoomed.pdf')
     
 
     
@@ -239,7 +240,7 @@ if __name__ == "__main__" :
     plt.legend(['$\phi_{\text{tot}} = 1.0$ (%.1f)' % err1_0, 
                 '$\phi_{\text{tot}} = 0.5$ (%.1f)' % err0_5, 
                 '$\phi_{\text{tot}} = 2.0$ (%.1f)' % err2_0], loc=0)
-    plt.savefig('different_total_fluxes.pdf')
+    plt.savefig(img_directory+'different_total_fluxes.pdf')
     #wplt.axis([0, 70, 0, 200])
     
    
@@ -256,7 +257,7 @@ if __name__ == "__main__" :
                 'Tik. 0.01 (%.1f)' % err_ti_1_0], loc=0)
     plt.xlabel('$E$ (eV)')
     plt.ylabel('$\phi(E)$')
-    plt.savefig('maxent_vs_minnorm.pdf')
+    plt.savefig(img_directory+'maxent_vs_minnorm.pdf')
     
     plt.figure(7)
     err_cd = sp.mean(100*abs(phi_cd-phi_ref)/phi_ref)
@@ -267,10 +268,10 @@ if __name__ == "__main__" :
                 'case 3 (%.1f)' % err11, 
                 'case 3 + Cd  (%.1f)' % err_cd,
                 'case 3 + Gd  (%.1f) ' % err_gd, 
-                'case 3 + Cd + Gd  (%.1f)' % err_cdgd],            loc=0)
+                'case 3 + Cd + Gd  (%.1f)' % err_cdgd], loc=0)
     plt.xlabel('$E$ (eV)')
     plt.ylabel('$\phi(E)$')
-    plt.savefig('filtered_unfold.pdf')
+    plt.savefig(img_directory+'filtered_unfold.pdf')
     
     plt.figure(8)
     plt.semilogy(x, yr, 'k', x, y11, 'r:', x, ycd, 'c--',x, ygd, 'b-.',x, ycdgd, 'g--')
@@ -278,22 +279,9 @@ if __name__ == "__main__" :
                 'case 3 (%.1f)' % err11, 
                 'case 3 + Cd  (%.1f)' % err_cd,
                 'case 3 + Gd  (%.1f) ' % err_gd, 
-                'case 3 + Cd + Gd  (%.1f)' % err_cdgd],            loc=0)
+                'case 3 + Cd + Gd  (%.1f)' % err_cdgd], loc=0)
     plt.xlabel('$E$ (eV)')
     plt.ylabel('$\phi(E)$')
     plt.axis([0.5,2,1e-4,1e1])
-    plt.savefig('filtered_unfold_zoom.pdf')
+    plt.savefig(img_directory+'filtered_unfold_zoom.pdf')
     
-    
-    
-    """ Conclusion: we don't need to have exact total flux, but we do need to
-        normalize it to something reasonable as part of the constraints.
-        
-        For talk:
-            - show results with 0.5, 1.0, 2.0 flux and the result without
-              normalization
-            - show table of sensitivities for the given flux spectrum
-              (maybe grouped?)
-            -
-    #wplt.axis([0, 70, 0, 200])
-    """

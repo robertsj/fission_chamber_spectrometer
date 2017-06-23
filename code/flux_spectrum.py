@@ -70,7 +70,7 @@ if __name__ == "__main__" :
     from multigroup_utilities import *
     from nice_plots import init_nice_plots
     init_nice_plots()
-    
+    from master_data import img_directory
     # PWR-like and TRIGA-like spectra
     pwr = Flux(7.0, 600.0)
     #triga = Flux(1.0, 600.0)
@@ -103,7 +103,7 @@ if __name__ == "__main__" :
     #plt.axis([1e-5, 1e7, 1e-12, 1e1])
     plt.xlabel('$E$ (eV)')
     plt.ylabel('$\phi(E)$')
-    plt.savefig('test_spectrum.pdf')
+    plt.savefig(img_directory+'test_spectrum.pdf')
     #plt.figure(2)
     #plt.loglog(E, E*phi_pwr, 'k', E_mg, phi_mg_pul, 'k--', 
     #           E, E*phi_triga, 'b', E_mg, triga_mg_pul, 'b:')
@@ -111,4 +111,4 @@ if __name__ == "__main__" :
     #plt.ylabel('$E\phi(E)$')
     
 
-    plt.show()
+    #plt.show()

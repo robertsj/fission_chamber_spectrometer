@@ -1,11 +1,13 @@
 import numpy as np
 from scipy.interpolate import interp1d as interp
 
+from master_data import directory, img_directory
+
 def load_cross_sections(isos) :
     """Read ascii cross sections and return as a dictionary."""
     data = {}
     for iso in isos :
-        E, sig = np.loadtxt('../data/'+iso+'.txt', skiprows=1, 
+        E, sig = np.loadtxt(directory+'/data/'+iso+'.txt', skiprows=1, 
                             delimiter=',', unpack=True) 
         data[iso] = {}
         data[iso]['value'] = sig
@@ -35,8 +37,8 @@ if __name__ == "__main__" :
     plt.axis([1e-5, 1e7, 1e-11, 1e5])
     plt.xlabel('E (eV)')
     plt.ylabel('$\sigma_f$ (b)')
-    plt.savefig('fission_cross_sections.pdf')  
-    plt.show()
+    plt.savefig(img_directory+'fission_cross_sections.pdf')  
+    #plt.show()
     
     
    
