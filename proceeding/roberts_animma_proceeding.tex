@@ -63,6 +63,8 @@
 \usepackage{amsmath}
 \usepackage{tabulary}
 \usepackage{amssymb}
+\usepackage{hyperref}
+
 % \usepackage{caption}
 %\usepackage{subcaption}
 \usepackage{bm}
@@ -536,11 +538,11 @@ where $\phi_g$ is the group-integrated flux, and it has been assumed that there 
 \end{equation}
 which yields a spectrum $\bm{\phi}$ having the smallest Euclidean norm $|\bm{\phi}|_2 = \sqrt{\bm{\phi}^T\bm{\phi}}$.  Although unique, the minimum-norm solution is not guaranteed to be strictly positive.  
 
-A second, straightforward inversion technique is Tihkonov regularization, i.e.,
+A second, straightforward inversion technique is Tihkonov regularization\cite{mueller2012lni}, i.e.,
 \begin{equation}
  \bm{\phi} = [\bm{\Sigma}^T \bm{\Sigma}+ \mathbf{T}^T \mathbf{T}]^{-1} \bm{\Sigma} \mathbf{r} \, ,
 \end{equation}
-where a common regularization matrix is $\mathbf{T} = a\mathbf{I}$ for a scalar $a$ and identity matrix $\mathbf{I}$.  
+where a common regularization matrix is $\mathbf{T} = a\mathbf{I}$ for a scalar $a$ and identity matrix $\mathbf{I}$.  Like the minimum-norm solution, the Tikhonov-regularization solution may also contain negative values.
 
 For the work presented here, the primary method used is based on entropy maximization\cite{itoh1989neutron}, in which the (Shannon) entropy of the spectrum is defined as
 \begin{equation}
@@ -557,29 +559,91 @@ is found by solving the nonlinear, constrained optimization problem resulting fr
 
 \section{Results}
 
-To demonstrate the use of entropy maximization for extracting spectral information from a set of unique, fission-chamber responses,  a simple test problem was studied.  In particular, the PWR spectrum shown in \FIG{fig:spectra} was taken to be the application spectrum, with which reference response functions (here, just the microscopic, multigroup, fission cross sections) were defined.  Then, spectra were unfolded for three cases: (1) using only ${}^{235}$U, ${}^{238}$U, and ${}^{232}$Th, (2) using  ${}^{235}$U, ${}^{238}$U, ${}^{232}$Th, ${}^{237}$Np, and ${}^{238}$Pu, and (3) using all nuclides shown in \FIG{fig:response}.  
-The nonlinear, maximization problem was solved using Sequential Least SQuares Programming (SLSQP), as implemented in SciPy \cite{scipy}.
+To demonstrate the use of entropy maximization for extracting spectral information from a set of unique, fission-chamber responses,  a simple test problem was studied.  In particular, the PWR spectrum shown in \FIG{fig:spectra} was taken to be the application spectrum, with which reference response functions (here, just the microscopic, multigroup, fission cross sections) were defined.  Then, spectra were unfolded for four base cases: (1) using only ${}^{235}$U, ${}^{238}$U, and ${}^{232}$Th, (2) using the Case-1 nuclides in addition to ${}^{237}$Np and ${}^{238}$Pu, (3) using the case-2 nuclides in addition to ${}^{239}$Pu, ${}^{240}$Pu, and ${}^{231}$Pu, and (4) using all nuclides shown in \FIG{fig:response}.  Furthermore, Case 3 was explored with and without the use of thermal-neutron filters (${}^{113}$Cd and ${}^{155}$Gd), while case Case 4 was analyzed using minimum-norm and Thikonov-regularization inversion in addition to maximum-entropy inversion.\footnote{Note, all results and figures were computed using Python (3.6.0) with NumPy (1.11.3), SciPy (0.18.1), and Matplotlib (2.0.0).  All code to generate the figures and this document are available at \url{https://github.com/robertsj/fission_chamber_spectrometer}.}
 
-The resulting spectra are shown in \FIG{fig:unfolded_spectra}, with the ratio of group-wise unfolded to reference spectra shown in \FIG{fig:error}. The three cases led to average, relative, group-wise errors of 201\%, 162\%, and 63\%, respectively.   The rather simple algorithm (with no prior information), is able to produce reasonably close spectral shapes with as few as 5 responses.  It was observed in scoping studies that inclusion of ${}^{238}$Pu has an important effect on the unfolding process.  In particular, and as can be observed in \FIG{fig:error}, the error between groups 30 and 45 (or energies from 0.78 to 2.1 eV) is reduced substantially with inclusion of ${}^{238}$Pu and its transmutation precursor, ${}^{237}$Np.  However, errors remain in this energy range and lower energies, which indicates that additional, thermal-sensitive information (e.g., from ${}^{10}$B) may be of use.
+
+The spectra resulting from maximum-entropy unfolding are shown in \FIG{fig:reconstructed_flux} and \FIG{fig:reconstructed_flux_lethargy}, with the ratio of group-wise unfolded to reference spectra shown in \FIG{fig:error}. The four cases led to average, relative, group-wise errors of 201\%, 126\%, 63\%, and 51\%, respectively.   The rather simple algorithm (with no prior information), is able to produce reasonably close spectral shapes with as few as 5 responses.  It was observed in scoping studies that inclusion of ${}^{238}$Pu has an important effect on the unfolding process.  In particular, and as can be observed in \FIG{fig:error}, the error between groups 30 and 45 (or energies from 0.78 to 2.1 eV) is reduced substantially with inclusion of ${}^{238}$Pu and its transmutation precursor, ${}^{237}$Np.  However, errors remain in this energy range and lower energies, which indicates that additional, thermal-sensitive information (e.g., from thermal filters like Cd) may be of use.
 
 \begin{figure}[h!tb]
   \centering
   \includegraphics[width = 0.49\textwidth]{../img/reconstructed_flux.pdf}
   \caption{Unfolded, multigroup spectra for cases 1--3 with reference spectrum for comparison.}
-  \label{fig:unfolded_spectra}
+  \label{fig:reconstructed_flux}
+\end{figure}
+
+\begin{figure}[h!tb]
+  \centering
+  \includegraphics[width = 0.49\textwidth]{../img/reconstructed_flux_lethargy.pdf}
+  \caption{Same as \FIG{fig:reconstructed_flux} but per unit lethargy.}
+  \label{fig:reconstructed_flux_lethargy}
 \end{figure}
 
 \begin{figure}[h!tb]
   \centering
   \includegraphics[width = 0.49\textwidth]{../img/groupwise_error.pdf}
   \caption{Group-wise ratios of unfolded to 
-  reference spectra.}
+  reference spectra.  Average, group-wise errors shown in parentheses inside the legend.}
   \label{fig:error}
 \end{figure}
 
-Near-term, future work to be explored is the practicality of using the particular reactants studied.  In particular, the overall sensitivity (fission rate for a given mass and flux) varies by several orders of magnitude, and so minimum masses needed for appropriate signals must be better understood.  Furthermore, it would most likely be impractical to pursue pure, isotopic reactants (e.g., ${}^{241}$Pu); rather, different vectors of a given chemical element might be produced via transmutation.  These and other details will be considered more thoroughly in a full paper.
 
-In addition, more complicated methods will be explored that admit uncertainties in the responses and use of a prior spectral information, e.g., like those implemented in the MAXED unfolding code \cite{reginatto1999maxed, reginatto2002spectrum}.  These algorithms  are expected to provide even more valuable information for validation of computer models.
+Recall that Eq.~\ref{eq:normalize} implies that the total flux is known as part of the maximum entropy unfolding process.  However, the total flux may not be known, or it may be known only imprecisely.  To understand how the total flux constraint impacts the unfolded spectrum, Case 4 was solved using three different total fluxes: 1.0, 0.5, and 2.0.  For all three cases, a flux normalized to 1.0 was used to generate the responses.  In other words, for a total flux of 0.5 and 2.0, Eqs.~(\ref{eq:response})~and~(\ref{eq:normalize}) used {\it inconsistent} fluxes, as would be the case were the total flux not known.  Shown in \FIG{fig:different_total_fluxes} are the group-wise, relative errors resulting from the study.  On the average, if the total flux is doubled or halved (relative to the flux used for generating responses), the resulting average, group-wise error is less than a factor of three.  In other words, the unfolding is not extremely sensitive to the total flux normalization.
+
+\begin{figure}[h!tb]
+  \centering
+  \includegraphics[width = 0.49\textwidth]{../img/different_total_fluxes.pdf}
+  \caption{Impact of total flux normalization on group-wise errors.  Average, group-wise errors shown in parentheses inside the legend.}
+  \label{fig:different_total_fluxes}
+\end{figure}
+
+The original scope of this study intended to focus on the simplest of maximum entropy techniques.  However, a comparison to simple inversion techniques is warranted.  Shown in \FIG{fig:maxent_vs_minnorm} are the results for Case 4 based on maximum entropy, minimum-norm, and Tikhonov-regularization.  For the latter, two values of $a$ were used: 0.1 and 0.01.  Overall, the maximum-entropy spectrum is closer (qualitatively and quantitatively) to the reference spectrum.  Both the minimum-norm and Tikhonov-regularization solutions contained negative values at energies near 1 eV.  Finally, the Tikhonov-regularization solution appears to be rather insensitive to the value of $a$ used in this particular application.  
+
+\begin{figure}[h!tb]
+  \centering
+  \includegraphics[width = 0.49\textwidth]{../img/maxent_vs_minnorm.pdf}
+  \caption{Comparison of maximum-entropy, minimum-norm, and Tikhonov-regularization spectra for Case 4.}
+  \label{fig:maxent_vs_minnorm}
+\end{figure}
+
+Inspired by other work presented at this conference\cite{kaiba2017cso}, a study was performed to determine the utility of thermal-neutron filters for providing additional responses given a fixed number of fissile nuclides.  In particular, Case 3 was revisited with the addition of ${}^{113}$Cd and ${}^{155}$Gd.  As a simple approximation, the attenuation of thermal neutrons due to 0.025 mm foils of each isotope was built directly into the fission response functions, the results of which are shown in \FIG{fig:filtered_responses_cd} and \FIG{fig:filtered_responses_gd}.  The filters were only applied to the nuclides with appreciable thermal sensitivity, i.e., ${}^{233}$U, ${}^{235}$U, ${}^{238}$Pu, ${}^{239}$Pu, and ${}^{241}$Pu.
+
+\begin{figure}[h!tb]
+  \centering
+  \includegraphics[width = 0.49\textwidth]{../img/filtered_responses_cd.pdf}
+  \caption{Cd-filtered and unfiltered responses for thermal-sensitive nuclides of Case 3.}
+  \label{fig:filtered_responses_cd}
+\end{figure}
+
+\begin{figure}[h!tb]
+  \centering
+  \includegraphics[width = 0.49\textwidth]{../img/filtered_responses_gd.pdf}
+  \caption{Gd-filtered and unfiltered responses for thermal-sensitive nuclides of Case 3.}
+  \label{fig:filtered_responses_gd}
+\end{figure}
+
+The results of the filter study are shown in \FIG{fig:filtered_unfold}, with a zoom in on the results near 1 eV shown in \FIG{fig:filtered_unfold_zoom}.  The results indicate that filtering improves the results, with use of Cd leading to a reduction from 63\% to 39\% in the average, group-wise, relative error.  Use of Gd is less effective, reducing the error to 53\%.  A combination of both filters leads to nearly a reduction by two in the error.  Note, although only the same number of fissile nuclides were used in this scenario, the addition of one filter doubles the number of unique responses available, while two filters triples the number of responses. 
+
+
+\begin{figure}[h!tb]
+  \centering
+  \includegraphics[width = 0.49\textwidth]{../img/filtered_unfold.pdf}
+  \caption{Unfolded spectra for Case 3 with and without filters.}
+  \label{fig:filtered_unfold}
+\end{figure}
+
+\begin{figure}[h!tb]
+  \centering
+  \includegraphics[width = 0.49\textwidth]{../img/filtered_unfold_zoom.pdf}
+  \caption{Same as \FIG{fig:filtered_unfold} but zoomed in on energies near 1 eV.}
+  \label{fig:filtered_unfold_zoom}
+\end{figure}
+
+
+\section{Conclusion}
+
+The primary question addressed by this work has been whether or not a multichambered fission detector could be used for in-core spectroscopy.  The basic conclusion to be made is that such spectroscopy is possible, to an extent.  Overall, the maximum entropy approach, when coupled to 5 or more responses (whether from unique nuclides or use of filters), can provide spectra with average, group-wise, relative errors of less than 100\% assuming that the total flux is well known.  
+
+Clearly, this work is scoping in nature, and the algorithms used throughout are simple and incorporate no prior information.  More complicated methods should be explored that admit uncertainties in the responses and use of a prior spectral information, e.g., like those implemented in the MAXED unfolding code \cite{reginatto1999maxed, reginatto2002spectrum}.  In addition, more work should be performed to identify candidate filters to maximize the utility of small subsets of fissile (or fissionable) nuclides given that the availability of some nuclides included in this study may be limited.  
 
 
 

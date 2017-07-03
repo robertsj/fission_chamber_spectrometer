@@ -237,9 +237,9 @@ if __name__ == "__main__" :
     plt.plot(range(1, 1+len(phi_5)), 100*abs(phi_15-phi_ref)/phi_ref, 'b--s',
              range(1, 1+len(phi_5)), 100*abs(phi_15_phi0_5-phi_ref)/phi_ref, 'g-.o',
              range(1, 1+len(phi_5)), 100*abs(phi_15_phi2_0-phi_ref)/phi_ref, 'r:*')
-    plt.legend(['$\phi_{\text{tot}} = 1.0$ (%.1f)' % err1_0, 
-                '$\phi_{\text{tot}} = 0.5$ (%.1f)' % err0_5, 
-                '$\phi_{\text{tot}} = 2.0$ (%.1f)' % err2_0], loc=0)
+    plt.legend(['$\phi_{tot} = 1.0$ (%.1f)' % err1_0, 
+                '$\phi_{tot} = 0.5$ (%.1f)' % err0_5, 
+                '$\phi_{tot} = 2.0$ (%.1f)' % err2_0], loc=0)
     plt.savefig(img_directory+'different_total_fluxes.pdf')
     #wplt.axis([0, 70, 0, 200])
     

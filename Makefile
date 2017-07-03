@@ -1,6 +1,7 @@
-.PHONY: plots presentation clean
+.PHONY: plots presentation proceeding clean
 
 plots:
+	mkdir -p img
 	python ./code/process_cross_sections.py
 	python ./code/flux_spectrum.py
 	python ./code/response.py
@@ -15,6 +16,6 @@ clean:
 	rm ./presentation/roberts_animma.aux
 
 proceeding:
-	echo "Not ready yet!"
+	bash ./proceeding/makeit
 
 all: plots 

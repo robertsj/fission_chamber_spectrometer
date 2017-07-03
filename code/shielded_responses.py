@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from master_data import isos_str, directory, img_directory
 
-
+from nice_plots import init_nice_plots
+init_nice_plots()
 
 isos_colors = {'u233': 'b', 'u235': 'r', 'pu238': 'g', 'pu239': 'c', 'pu241': 'm'}
 

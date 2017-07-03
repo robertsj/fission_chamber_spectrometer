@@ -1,0 +1,5 @@
+cd proceeding
+pdflatex roberts_animma_proceeding.tex
+bibtex roberts_animma_proceeding.aux
+pdflatex roberts_animma_proceeding.tex
+pdflatex roberts_animma_proceeding.tex 
