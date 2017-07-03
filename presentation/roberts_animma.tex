@@ -117,7 +117,7 @@
     
     \begin{frame}{Fission Cross Sections (data from http://www.nndc.bnl.gov)}
          \begin{center}
-             \includegraphics[totalheight=.8\textheight]{../code/fission_cross_sections.pdf}
+             \includegraphics[totalheight=.8\textheight]{../img/fission_cross_sections.pdf}
          \end{center}
     \end{frame}
     
@@ -171,14 +171,14 @@
     
     \begin{frame}{Test Spectrum}
          \begin{center}
-             \includegraphics[totalheight=.7\textheight]{../code/test_spectrum.pdf}
+             \includegraphics[totalheight=.7\textheight]{../img/test_spectrum.pdf}
          \end{center}
          Comments: WIMS 69-group format; fast-to-thermal ratio of 4.
     \end{frame}
     
     \begin{frame}{Multigroup Response Functions}
          \begin{center}
-             \includegraphics[totalheight=.85\textheight]{../code/fission_responses.pdf}
+             \includegraphics[totalheight=.85\textheight]{../img/fission_responses.pdf}
          \end{center}
     \end{frame}
 
@@ -218,10 +218,19 @@
     
     \begin{frame}{Some Numerical Details}
      \begin{itemize}
+      \item All calculations performed with Python 3:
+        \begin{itemize}
+          \item Python 3.5.3 (via Anaconda)
+          \item NumPy 1.11.3
+          \item Matplotlib 1.5.1
+          \item SciPy 0.19.0
+        \end{itemize}
       \item Maximum entropy unfolding based on Sequential Least SQuares Programming
             as implemented in SciPy
       \item All responses, etc., integrated using good old trapezoid rule 
+      \item \url{github.com/robertsj/fission_chamber_spectrometer}
      \end{itemize}
+     
 
     \end{frame}
 
@@ -249,63 +258,63 @@
     
     \begin{frame}{Unfolded Spectra}
          \begin{center}
-             \includegraphics[totalheight=.85\textheight]{../code/reconstructed_flux.pdf}
+             \includegraphics[totalheight=.85\textheight]{../img/reconstructed_flux.pdf}
          \end{center}
     \end{frame}
 
     \begin{frame}{Unfolded Spectra}
          \begin{center}
-             \includegraphics[totalheight=.85\textheight]{../code/reconstructed_flux_lethargy.pdf}
+             \includegraphics[totalheight=.85\textheight]{../img/reconstructed_flux_lethargy.pdf}
          \end{center}
     \end{frame}
     
     \begin{frame}{Group-Wise, Relative Errors (\%)}
          \begin{center}
-             \includegraphics[totalheight=.85\textheight]{../code/groupwise_error.pdf}
+             \includegraphics[totalheight=.85\textheight]{../img/groupwise_error.pdf}
          \end{center}
     \end{frame}
     
     \begin{frame}{Group-Wise, Relative Errors (\%, Zoomed)}
          \begin{center}
-             \includegraphics[totalheight=.85\textheight]{../code/groupwise_error_zoomed.pdf}
+             \includegraphics[totalheight=.85\textheight]{../img/groupwise_error_zoomed.pdf}
          \end{center}
     \end{frame}
     
     \begin{frame}{Impact of Total Flux Normalization (Errors, \%)}
          \begin{center}
-             \includegraphics[totalheight=.85\textheight]{../code/different_total_fluxes.pdf}
+             \includegraphics[totalheight=.85\textheight]{../img/different_total_fluxes.pdf}
          \end{center}
     \end{frame}
 
     \begin{frame}{Maximum Entropy vs. Minimum Norm and Tikhonov}
          \begin{center}
-             \includegraphics[totalheight=.85\textheight]{../code/maxent_vs_minnorm.pdf}
+             \includegraphics[totalheight=.85\textheight]{../img/maxent_vs_minnorm.pdf}
          \end{center}
     \end{frame}  
     
     \begin{frame}{Impact of 0.025 mm Cd Filter on Response Functions}
          \begin{center}
-             \includegraphics[totalheight=.75\textheight]{../code/filtered_responses_cd.pdf}
+             \includegraphics[totalheight=.75\textheight]{../img/filtered_responses_cd.pdf}
          \end{center}
     \end{frame}  
     
     
     \begin{frame}{Impact of 0.025 mm Gd Filter on Response Functions}
          \begin{center}
-             \includegraphics[totalheight=.75\textheight]{../code/filtered_responses_gd.pdf}
+             \includegraphics[totalheight=.75\textheight]{../img/filtered_responses_gd.pdf}
          \end{center}
     \end{frame}  
     
     
     \begin{frame}{Case 3 With and Without Filters}
          \begin{center}
-             \includegraphics[totalheight=.85\textheight]{../code/filtered_unfold.pdf}
+             \includegraphics[totalheight=.85\textheight]{../img/filtered_unfold.pdf}
          \end{center}
     \end{frame}  
     
     \begin{frame}{Case 3 With and Without Filters (Zoomed)}
          \begin{center}
-             \includegraphics[totalheight=.85\textheight]{../code/filtered_unfold_zoom.pdf}
+             \includegraphics[totalheight=.85\textheight]{../img/filtered_unfold_zoom.pdf}
          \end{center}
     \end{frame}  
     

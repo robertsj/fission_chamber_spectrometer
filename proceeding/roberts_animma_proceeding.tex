@@ -464,7 +464,7 @@ KS, 66502 (email: jaroberts@ksu.edu).}
 % As a general rule, do not put math, special symbols or citations
 % in the abstract or keywords.
 \begin{abstract}
-In recent years, substantial interest has grown in the development of in-core instrumentation that can provide data for validation of advanced computational models for reactor analysis.  Work at Commissariat à l'énergie atomique et aux énergies alternatives in France to produce ``sub-miniature'' fission chambers and at Kansas State University to produce ``micro-pocket'' fission chambers has led to extremely small devices that provide opportunities for multiple, in-core flux monitors capable of providing detailed core-power maps over varying operational conditions.  Some work has been done to determine continuous flux shapes from the point-wise measurements, and ongoing research aims to provide devices capable of exhibiting linear response across many decades of power levels, e.g., as observed in pulsed reactors like the Transient Reactor Test Facility (better known as TREAT) at Idaho National Laboratory and various university reactors, including the Training, Research, Isotopes, General Atomic reactor at Kansas State University.  Even in the earliest developments at Kansas State University, it was proposed to deploy two-chamber devices loaded with U and Th, respectively, in order to distinguish between thermal and fast fluxes.  However, the threshold energy for Th fission is approximately 1 MeV, too large to provide sufficient detail in the epithermal region.  Here, alternative reactants, in greater number, were explored to understand how the resulting signals from multiple chambers could be used to resolve the neutron spectrum.  In particular, it was hypothesized that a sufficient number of chambers with unique reactants can act as a real-time, foil-activation experiment.  An unfolding scheme based on maximizing (Shannon) entropy was used to produce a flux spectrum from detector signals that requires no a priori information. To test the method, integral, detector responses were generated for single-isotope detectors of Th-232, U (233, 234, 235, and 238), Np-237, and Pu (238, 239, 240, 241, and 242) using a simplified, pressurized-water reactor spectrum and flux-weighted, microscopic, fission cross sections, in the 69-group, Winfrith Improved Multigroup Scheme (often called the WIMS-69) format.  An unfolded spectrum was found from subsets of these responses that had a maximum entropy while reproducing the responses considered and summing to one (that is, they were normalized).  Three, specific cases were considered: (1) use of only U-235, U-238, and Th-232, (2) use of U-235, U-238, Th-232, Np-237, and Pu-238, and (3) use of all nuclides listed previously.  The three cases led to average, relative, group-wise errors of 201\%, 162\%, and 63\%, respectively.  Although inclusion of Pu-238 substantially reduced major errors between energies of 0.78 and 2.1 eV, residual errors in this energy range and at lower energies suggests greater information in the thermal regime is needed.  More advanced methods have been developed to incorporate a priori estimates of the spectrum and detector response uncertainties.  These methods will be studied as part of future work, as will be the feasibility of producing and handling the reactants studied in the present work.
+Presented is a short, computational study on the potential use of multichambered fission detectors for in-core, neutron spectroscopy.  Motivated by the development of very small fission chambers at CEA in France and at Kansas State University in the U.S., it was assumed in this preliminary analysis that devices can be made small enough to avoid flux perturbations and that uncertainties related to measurements can be ignored.  It was hypothesized that a sufficient number of chambers with unique reactants can act as a real-time, foil-activation experiment.  An unfolding scheme based on maximizing (Shannon) entropy was used to produce a flux spectrum from detector signals that requires no a priori information. To test the method, integral, detector responses were generated for single-isotope detectors of various Th, U, Np, Pu, Am, and Cs isotopes using a simplified, pressurized-water reactor spectrum and flux-weighted, microscopic, fission cross sections, in the WIMS-69 multigroup format.  An unfolded spectrum was found from subsets of these responses that had a maximum entropy while reproducing the responses considered and summing to one (that is, they were normalized).   Several nuclide subsets were studied, and, as expected, the results indicate inclusion of more nuclides leads to better spectra but with diminishing improvements, with the best-case spectrum having an average, relative, group-wise error of approximately 51\%.  Furthermore, spectra found from minimum-norm and Tihkonov-regularization inversion were of lower quality than the maximum entropy solutions.  Finally, the addition of thermal-neutron filters (here, Cd and Gd) provided substantial improvement over unshielded responses alone.  The results, as a whole, suggest that in-core, neutron spectroscopy is at least marginally feasible.
 \end{abstract}
 
 % Note that keywords are not normally used for peerreview papers.
@@ -496,14 +496,14 @@ With their small size, it may be possible to use several, co-located sub-miniatu
 
 \section{Methods}
 
-Shown in \FIG{fig:reactants} are the microscopic fission cross sections for several nuclides of Th, U, Np, and Pu.  
+Shown in \FIG{fig:reactants} are the microscopic fission cross sections for several nuclides of Th, U, Np, Pu, Am, and Cm.  
 \begin{figure}[h!tb]
   \centering
   \includegraphics[width = 0.49\textwidth]{../img/fission_cross_sections.pdf}
-  \caption{Microscopic fission cross sections for several nuclides.}
+  \caption{Microscopic fission cross sections for several nuclides.  All data was pulled directly from NNDC\cite{nndc}.}
   \label{fig:reactants}
 \end{figure}
-Note, the values shown are evaluated at 300 K.  The same cross sections are shown in the 69-group WIMS \cite{stammler1984methods} format condensed using the simplified, pressurized-water reactor (PWR)  spectrum shown in Figure \ref{fig:spectra}.
+The values shown are evaluated at 300 K.  The same cross sections are shown in the 69-group WIMS \cite{stammler1984methods} format condensed using the simplified, pressurized-water reactor (PWR)  spectrum shown in Figure \ref{fig:spectra}.  
 \begin{figure}[h!tb]
   \centering
   \includegraphics[width = 0.49\textwidth]{../img/fission_responses.pdf}
@@ -516,27 +516,44 @@ Note, the values shown are evaluated at 300 K.  The same cross sections are show
   \caption{Simplified, PWR-like spectrum used to weight cross sections as response functions; the multigroup equivalent is also shown.}
   \label{fig:spectra}
 \end{figure}
-Observe that the spectrum used has no fine structure.  On the other hand, the geometry of any detector of interest will be sufficiently small that the infinite-dilution approximation is valid.  In other words, self-shielding effects due to the detectors themselves are negligible and need not be accounted for in determination of the multigroup constants and, hence, the detector response functions.
+Observe that the spectrum used has no fine structure and, hence, represents a very simple test case for unfolding.  On a related note, the geometry of any detector of interest will be sufficiently small (by assumption) that the infinite-dilution approximation is valid.  In other words, self-shielding effects due to the detectors themselves are negligible and need not be accounted for in determination of the multigroup constants and, hence, the detector response functions.
 
-Suppose an 11-chamber device were produced having a sufficient mass of each reactant shown in \FIG{fig:response} to produce a measurable, negligible-uncertainty signal in some application reactor.  Suppose further that the goal is to determine the flux spectrum of the application reactor using the 69-group WIMS energy structure.  The resulting system of equations is 
+Suppose an N-chamber device were produced having a sufficient mass of each reactant shown in \FIG{fig:response} to produce a measurable, negligible-uncertainty signal in some application reactor.  Suppose further that the goal is to determine the flux spectrum of the application reactor using the 69-group WIMS energy structure.  The resulting system of equations is 
 \begin{equation}
-  R_i = \sum_{g=1}^{69} \Sigma_{fg,i}  \phi_g\, , 
-    \qquad i = 1 \ldots 11 \, ,
+  r_i = \sum_{g=1}^{69} \Sigma_{fg,i}  \phi_g\, , 
+    \qquad i = 1 \ldots N \, ,
 \label{eq:response}
 \end{equation}
-where $\phi_g$ is the group-integrated flux, and it has been assumed that no losses due to dead time or discriminators.  This is a major assumption with respect to the technology, but if the response of each device is linear, and if any losses are proportional to the signal similarly for all reactants, then the equations need only be modified by a single, multiplicative constant on the right.  For real-world cases, further work must be done to include such features of the system explicitly.
-
-\EQUATION{eq:response} is an underdetermined system, meaning that additional constraints are needed.  Such a problem belongs to the class of  spectrum unfolding problems, itself a class of inverse problems.  Many methods have been proposed to solve such problems, whether arising from Bonner-sphere spectroscopy or other applications.  Here, a method based on  entropy maximization was adopted \cite{itoh1989neutron}, in which the (Shannon) entropy of the spectrum is defined as
+or, in matrix form,
 \begin{equation}
- S = -\sum^{69}_g \phi_g \ln \phi_g \, .
+ \mathbf{r} = \bm{\Sigma}_f \bm{\phi} \, ,
+\end{equation}
+where $\phi_g$ is the group-integrated flux, and it has been assumed that there are no losses due to dead time or discriminators.   This is a major assumption with respect to the technology, but if the response of each device is linear, and if any losses are proportional to the signal similarly for all reactants, then the equations need only be modified by a single, multiplicative constant on the right.  For real-world cases, further work must be done to include such features of the system explicitly.
+
+\EQUATION{eq:response} is an underdetermined system, meaning that specialized techniques or additional constraints are needed.  Such a problem belongs to the class of  spectrum unfolding problems, itself a class of inverse problems.  Many methods have been proposed to solve such problems, whether arising from Bonner-sphere spectroscopy or other applications.  One simple inversion technique is to compute the minimum-norm solution, i.e.,
+\begin{equation}
+  \bm{\phi} =  \bm{\Sigma}  [\bm{\Sigma} \bm{\Sigma}^T]^{-1}\mathbf{r} \, ,
+\end{equation}
+which yields a spectrum $\bm{\phi}$ having the smallest Euclidean norm $|\bm{\phi}|_2 = \sqrt{\bm{\phi}^T\bm{\phi}}$.  Although unique, the minimum-norm solution is not guaranteed to be strictly positive.  
+
+A second, straightforward inversion technique is Tihkonov regularization, i.e.,
+\begin{equation}
+ \bm{\phi} = [\bm{\Sigma}^T \bm{\Sigma}+ \mathbf{T}^T \mathbf{T}]^{-1} \bm{\Sigma} \mathbf{r} \, ,
+\end{equation}
+where a common regularization matrix is $\mathbf{T} = a\mathbf{I}$ for a scalar $a$ and identity matrix $\mathbf{I}$.  
+
+For the work presented here, the primary method used is based on entropy maximization\cite{itoh1989neutron}, in which the (Shannon) entropy of the spectrum is defined as
+\begin{equation}
+ S = -\sum^{69}_{g=1} \phi_g \ln \phi_g \, .
 \label{eq:entropy}
 \end{equation}
 The flux spectrum with the greatest entropy that satisfies both \EQ{eq:response} and
 \begin{equation}
- \sum^{69}_g \phi_g = 1
+ \sum^{69}_{g=1} \phi_g = 1
 \label{eq:normalize}
 \end{equation}
-is found by solving the nonlinear, constrained optimization problem resulting from Eqs.~(\ref{eq:response})--(\ref{eq:normalize}).  Note, the normalization of the flux to unity is equivalent to using normalized responses, i.e., $R_i/\sum_g \phi_g$ in place of $R_i$, as done in Ref.~\cite{itoh1989neutron}.
+is found by solving the nonlinear, constrained optimization problem resulting from Eqs.~(\ref{eq:response})--(\ref{eq:normalize}).  Equation~\ref{eq:normalize} implies that the integrated flux is known, which may not be the case in practice.  However, the results below indicate that the unfolding process is not severely sensitive to the assumed, integral flux, meaning that even a crude estimate can be used.  If the constraint is not employed, the results are much less favorable.
+
 
 \section{Results}
 
