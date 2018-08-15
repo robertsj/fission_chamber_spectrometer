@@ -12,7 +12,8 @@ from multigroup_utilities import energy_groups, plot_multigroup_data
 from spectrum import Spectrum
 import matplotlib.pyplot as plt
 import shutil
-
+from scipy.integrate import trapz
+from flux import select_flux_spectrum
 
 
 
@@ -68,6 +69,19 @@ def plotit(U, rs, name):
     plt.close(fig)
     
 
+def bin_flux(flux, struct):
+    lower = 1e-5
+    upper = 2e7
+    eb = energy_groups(struct, lower, upper)
+    phi = sp.zeros(len(eb)-1)
+    for i in range(len(eb)-1) :
+        E = sp.logspace(sp.log10(eb[i+1]), sp.log10(eb[i]), 1e4)
+        x = trapz(flux(E), E)
+        print("->",i,eb[i+1], eb[i], x)
+        phi[i] = trapz(flux(E), E)
+    phi = phi[::-1] / np.sum(phi)
+    return phi
+
 
 isos_cd = ['u233cd113', 'u235cd113', 'pu238cd113', 'pu239cd113', 'pu241cd113']
 isos_gd = ['u233gd155', 'u235gd155', 'pu238gd155', 'pu239gd155', 'pu241gd155']
@@ -81,22 +95,32 @@ isos_5 = isos_3 + isos_cd
 isos_6 = isos_3 + isos_gd
 isos_7 = isos_3 + isos_cd + isos_gd  
 
-struct = 'wims69'
-pwr = Flux(7.0, 600.0)
-name = 'test_wims69_resp.p'
-resp = generate_responses(isos+isos_cd+isos_gd, pwr.evaluate, 
-                          struct=struct, name=name, overwrite=True)
-R = integral_response(name)
-RF = resp['response']
-for key, val in RF.items():
-    RF[key] = val[::-1]
-
-phi_ref = resp['phi'][::-1]
-phi_ref = phi_ref / sum(phi_ref)
-eb = resp['eb'][::-1] * 1e-6  # convert to MeV
-ds = Spectrum(eb, phi_ref * 0.3)
-rs = Spectrum(eb, phi_ref)
-
-
-
-phi_3 = unfold_umg(R, RF, ds, rs, eb, isos=isos_1, name='generic')
+structs = ['wims69']
+for struct in structs:
+    phi_triga = select_flux_spectrum('trigaC', 1)[2]
+    name = 'test_wims69_resp.p'
+    resp = generate_responses(isos+isos_cd+isos_gd, phi_triga, 
+                              struct=struct, name=name, overwrite=True)
+    R = integral_response(name)
+    RF = resp['response']
+    for key, val in RF.items():
+        RF[key] = val[::-1]
+    
+    phi_ref = resp['phi'][::-1]
+    phi_ref = phi_ref / sum(phi_ref)
+    eb = resp['eb'][::-1] * 1e-6  # convert to MeV
+    rs = Spectrum(eb, phi_ref)
+    
+    pwr = Flux(7.0, 600.0)
+    ds_pwr = bin_flux(pwr.evaluate, struct)
+    ds_low = Spectrum(eb, ds_pwr * 0.1)
+    ds_hi = Spectrum(eb, ds_pwr * 10)
+    ds_on = Spectrum(eb, ds_pwr)
+    default_spectra = {'hi': ds_hi,
+                       'low': ds_low,
+                       'on': ds_on}
+    
+    all_iso_sets = [isos_1, isos_2, isos_3, isos_4, isos_5, isos_6, isos_7]
+    for i, iso_set in enumerate(all_iso_sets):
+        for key, ds in default_spectra.items():
+            unfold_umg(R, RF, ds, rs, eb, isos=iso_set, name='{}_iso{}'.format(key, i+1))
