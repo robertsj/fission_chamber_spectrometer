@@ -196,7 +196,7 @@ class Unfolding(object):
         fluString = 'Default Spectrum for Bonner Sphere Unfolding\n'
         fluString += '       {}          {}\n'.format(self.mode, self.dsIEU)
         fluString += '       2        {}        {}   {:4.3E}\n'.format(
-                self.ds.num_edges, self.ds.num_edges, self.ds.edges[-1])
+                self.ds.num_bins, self.ds.num_bins, self.ds.edges[-1])
         for i in range(self.ds.num_bins):
             fluString += '{:4.3E}  {:4.3E}  {:4.3E}\n'.format(self.ds.edges[i], self.ds.values[i], self.ds.error[i])
         with open('inp/{}.flu'.format(self.fluName), 'w+') as F:

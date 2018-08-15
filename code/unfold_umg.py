@@ -51,15 +51,35 @@ def plotit(U, rs, name):
     
     ax.plot(*U.ds.step, color='k', label='Default')
     ax.plot(*rs.step, color='r', linestyle='--', label='Starting')
-    ax.plot(*sol.step, color='b', label='Solution')
+    ax.plot(*sol.step, color='b',linestyle=':', label='Solution')
     
     ax.legend(frameon=False)
     fig.savefig(plot_path + name + '.pdf')
+    plt.close(fig)
+    
+    # plot comparisons
+    fig = plt.figure(124)
+    ax = fig.add_subplot(111)
+    x = range(U.ds.num_bins)
+    y = sol.values / rs.values
+    y = y[::-1]
+    ax.plot(x, y, color='k', marker='o')
+    fig.savefig(plot_path + name + '_comp.pdf')
+    plt.close(fig)
+    
 
 
 isos_cd = ['u233cd113', 'u235cd113', 'pu238cd113', 'pu239cd113', 'pu241cd113']
 isos_gd = ['u233gd155', 'u235gd155', 'pu238gd155', 'pu239gd155', 'pu241gd155']
-  
+
+isos_1 = ['u235', 'u238', 'th232']
+isos_2 = ['u235', 'u238', 'th232', 'np237', 'pu238']
+isos_3 = ['th232','u233','u234','u235','u238','np237',
+          'pu238','pu239','pu240','pu241','pu242']
+isos_4 = isos
+isos_5 = isos_3 + isos_cd
+isos_6 = isos_3 + isos_gd
+isos_7 = isos_3 + isos_cd + isos_gd  
 
 struct = 'wims69'
 pwr = Flux(7.0, 600.0)
@@ -77,15 +97,6 @@ eb = resp['eb'][::-1] * 1e-6  # convert to MeV
 ds = Spectrum(eb, phi_ref * 0.3)
 rs = Spectrum(eb, phi_ref)
 
-isos_1 = ['u235', 'u238', 'th232']
-isos_2 = ['u235', 'u238', 'th232', 'np237', 'pu238']
-isos_3 = ['th232','u233','u234','u235','u238','np237',
-          'pu238','pu239','pu240','pu241','pu242']
-isos_4 = isos
 
-
-isos_5 = isos_3 + isos_cd
-isos_6 = isos_3 + isos_gd
-isos_7 = isos_3 + isos_cd + isos_gd
 
 phi_3 = unfold_umg(R, RF, ds, rs, eb, isos=isos_1, name='generic')
