@@ -11,13 +11,14 @@ from response import generate_responses
 from multigroup_utilities import energy_groups, plot_multigroup_data
 from spectrum import Spectrum
 import matplotlib.pyplot as plt
+import os
 import shutil
 from scipy.integrate import trapz
 from flux import select_flux_spectrum
 
 
 
-def unfold_umg(R, RF, ds, rs, eb, isos, name):
+def unfold_umg(R, RF, ds, ts, eb, isos, name):
     # generate response vector
     response = np.ones(len(isos))
     rfs = np.ones((len(isos), len(ds.values)))
@@ -35,11 +36,11 @@ def unfold_umg(R, RF, ds, rs, eb, isos, name):
     U.set_rf(eb, rfs)
     U.set_ds(ds)
     U.run(name)
-    plotit(U, rs, name)
+    plotit(U, ts, name)
     shutil.rmtree('inp')
 
 
-def plotit(U, rs, name):
+def plotit(U, ts, name):
     # load dataset
     data = np.loadtxt(data_path + '{}_unfolded.txt'.format(name))
     data = data.T
@@ -51,7 +52,7 @@ def plotit(U, rs, name):
     ax.set_yscale('log')
     
     ax.plot(*U.ds.step, color='k', label='Default')
-    ax.plot(*rs.step, color='r', linestyle='--', label='Starting')
+    ax.plot(*ts.step, color='r', linestyle='--', label='True')
     ax.plot(*sol.step, color='b',linestyle=':', label='Solution')
     
     ax.legend(frameon=False)
@@ -62,11 +63,13 @@ def plotit(U, rs, name):
     fig = plt.figure(124)
     ax = fig.add_subplot(111)
     x = range(U.ds.num_bins)
-    y = sol.values / rs.values
+    y = sol.values / ts.values
     y = y[::-1]
     ax.plot(x, y, color='k', marker='o')
     fig.savefig(plot_path + name + '_comp.pdf')
     plt.close(fig)
+    
+    os.system('rm ' + data_path + '{}_unfolded.txt'.format(name))
     
 
 def bin_flux(flux, struct):
@@ -95,7 +98,7 @@ isos_5 = isos_3 + isos_cd
 isos_6 = isos_3 + isos_gd
 isos_7 = isos_3 + isos_cd + isos_gd  
 
-structs = ['wims69']
+structs = ['tg0_625', 'lwr32', 'wims69']
 for struct in structs:
     phi_triga = select_flux_spectrum('trigaC', 1)[2]
     name = 'test_wims69_resp.p'
@@ -109,7 +112,7 @@ for struct in structs:
     phi_ref = resp['phi'][::-1]
     phi_ref = phi_ref / sum(phi_ref)
     eb = resp['eb'][::-1] * 1e-6  # convert to MeV
-    rs = Spectrum(eb, phi_ref)
+    ts = Spectrum(eb, phi_ref)
     
     pwr = Flux(7.0, 600.0)
     ds_pwr = bin_flux(pwr.evaluate, struct)
@@ -123,4 +126,5 @@ for struct in structs:
     all_iso_sets = [isos_1, isos_2, isos_3, isos_4, isos_5, isos_6, isos_7]
     for i, iso_set in enumerate(all_iso_sets):
         for key, ds in default_spectra.items():
-            unfold_umg(R, RF, ds, rs, eb, isos=iso_set, name='{}_iso{}'.format(key, i+1))
+            unfold_umg(R, RF, ds, ts, eb, isos=iso_set, name='{}_{}_iso{}'.format(struct, key, i+1))
+
