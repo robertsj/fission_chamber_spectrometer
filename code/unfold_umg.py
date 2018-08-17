@@ -50,10 +50,12 @@ def plotit(U, ts, name):
     ax = fig.add_subplot(111)
     ax.set_xscale('log')
     ax.set_yscale('log')
+    ax.set_xlabel('E (MeV)')
+    ax.set_ylabel('$\Phi$')
     
     ax.plot(*U.ds.step, color='k', label='Default')
     ax.plot(*ts.step, color='r', linestyle='--', label='True')
-    ax.plot(*sol.step, color='b',linestyle=':', label='Solution')
+    ax.plot(*sol.step, color='b',linestyle=':', label='MAXED')
     
     ax.legend(frameon=False)
     fig.savefig(plot_path + name + '.pdf')
@@ -62,6 +64,9 @@ def plotit(U, ts, name):
     # plot comparisons
     fig = plt.figure(124)
     ax = fig.add_subplot(111)
+    ax.set_xlabel('Group')
+    ax.set_ylabel('$\Phi_{MAXED}/$\Phi_{true}$')
+    
     x = range(U.ds.num_bins)
     y = sol.values / ts.values
     y = y[::-1]
@@ -116,8 +121,8 @@ for struct in structs:
     
     pwr = Flux(7.0, 600.0)
     ds_pwr = bin_flux(pwr.evaluate, struct)
-    ds_low = Spectrum(eb, ds_pwr * 0.1)
-    ds_hi = Spectrum(eb, ds_pwr * 10)
+    ds_low = Spectrum(eb, ds_pwr * 0.5)
+    ds_hi = Spectrum(eb, ds_pwr * 2)
     ds_on = Spectrum(eb, ds_pwr)
     default_spectra = {'hi': ds_hi,
                        'low': ds_low,
