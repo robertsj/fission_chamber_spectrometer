@@ -18,7 +18,7 @@ from flux import select_flux_spectrum
 
 
 
-def unfold_umg(R, RF, ds, ts, eb, isos, name):
+def unfold_umg(R, RF, ds, ts, eb, isos, name, program):
     # generate response vector
     response = np.ones(len(isos))
     rfs = np.ones((len(isos), len(ds.values)))
@@ -35,6 +35,7 @@ def unfold_umg(R, RF, ds, ts, eb, isos, name):
     U.set_responses(response)
     U.set_rf(eb, rfs)
     U.set_ds(ds)
+    U.set_routine(program)
     U.run(name)
     plotit(U, ts, name)
     shutil.rmtree('inp')
@@ -131,8 +132,9 @@ for struct in structs:
     all_iso_sets = [isos_1, isos_2, isos_3, isos_4, isos_5, isos_6, isos_7]
     for i, iso_set in enumerate(all_iso_sets):
         for key, ds in default_spectra.items():
-            nombre = '{}_{}_iso{}'.format(struct, key, i+1)
-            solution_data[nombre] = unfold_umg(R, RF, ds, ts, eb, isos=iso_set, name=nombre)
+            for p, pgm in [('mx', 'maxed'), ('gr', 'gravel')]:
+                nombre = '{}_{}_{}_iso{}'.format(struct, key, p, i+1)
+                solution_data[nombre] = unfold_umg(R, RF, ds, ts, eb, isos=iso_set, name=nombre, program=pgm)
 
 for key, val in solution_data.items():
     print('{}:  {}'.format(key, sp.mean(val[1])))
