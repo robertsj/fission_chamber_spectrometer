@@ -38,13 +38,12 @@ def unfold_umg(R, RF, ds, ts, eb, isos, name):
     U.run(name)
     plotit(U, ts, name)
     shutil.rmtree('inp')
+    return U.solution, 100 * abs(U.solution.values - ts.values)/ ts.values
 
 
 def plotit(U, ts, name):
     # load dataset
-    data = np.loadtxt(data_path + '{}_unfolded.txt'.format(name))
-    data = data.T
-    sol = Spectrum(U.ds.edges, data[1], data[2], dfde=True)
+    sol = U.solution
         
     fig = plt.figure(123)
     ax = fig.add_subplot(111)
@@ -68,7 +67,7 @@ def plotit(U, ts, name):
     ax.set_ylabel('$\Phi_{MAXED}/$\Phi_{true}$')
     
     x = range(U.ds.num_bins)
-    y = sol.values / ts.values
+    y = abs(sol.values - ts.values) / ts.values
     y = y[::-1]
     ax.plot(x, y, color='k', marker='o')
     fig.savefig(plot_path + name + '_comp.pdf')
@@ -104,6 +103,7 @@ isos_6 = isos_3 + isos_gd
 isos_7 = isos_3 + isos_cd + isos_gd  
 
 structs = ['tg0_625', 'lwr32', 'wims69']
+solution_data = {}
 for struct in structs:
     phi_triga = select_flux_spectrum('trigaC', 1)[2]
     name = 'test_wims69_resp.p'
@@ -131,5 +131,10 @@ for struct in structs:
     all_iso_sets = [isos_1, isos_2, isos_3, isos_4, isos_5, isos_6, isos_7]
     for i, iso_set in enumerate(all_iso_sets):
         for key, ds in default_spectra.items():
-            unfold_umg(R, RF, ds, ts, eb, isos=iso_set, name='{}_{}_iso{}'.format(struct, key, i+1))
+            nombre = '{}_{}_iso{}'.format(struct, key, i+1)
+            solution_data[nombre] = unfold_umg(R, RF, ds, ts, eb, isos=iso_set, name=nombre)
+
+for key, val in solution_data.items():
+    print('{}:  {}'.format(key, sp.mean(val[1])))
+
 

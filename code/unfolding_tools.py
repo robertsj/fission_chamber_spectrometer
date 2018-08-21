@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import os
 import subprocess
 from master_data import umg_path, data_path, plot_path
+from spectrum import Spectrum
 
 
 class Unfolding(object):
@@ -30,6 +31,7 @@ class Unfolding(object):
         self.setSolnRepresentation(1)
         self.setSolnScaling([0, 1, 1])
         self.set_routine('maxed')
+        self.solution = 'Not Run Yet'
 
     def setSphereIDs(self, ids):
         # sphereIDs - a list of lists that contains an 8 character short ID and 16 char long ID for
@@ -249,6 +251,9 @@ class Unfolding(object):
         self.writeInputFiles()
         self.unfold()
         self.storeResult(label)
+        data = np.loadtxt(data_path + '{}_unfolded.txt'.format(label))
+        data = data.T
+        self.solution = Spectrum(self.ds.edges, data[1], data[2], dfde=True)
 
     def plotSpectra(self, name='generic', clear=True, ds=True):
         plt.figure(0)
