@@ -210,7 +210,7 @@ class Unfolding(object):
         inpString += '{}.fmt   \n'.format(self.fmtName)
         inpString += '{}   \n'.format(self.outName)
         inpString += '{}.flu   \n'.format(self.fluName)
-        inpString += '{}   \n'.format(max(self.rfErgEdges))
+        inpString += '{}   \n'.format(max(self.rfErgEdges) + 1)
         inpString += '{}   \n'.format(self.finalChiSqr)
         if self.routine == 'maxed':
             inpString += '{}, {}   \n'.format(self.temp[0], self.temp[1])
@@ -253,7 +253,7 @@ class Unfolding(object):
         self.storeResult(label)
         data = np.loadtxt(data_path + '{}_unfolded.txt'.format(label))
         data = data.T
-        self.solution = Spectrum(self.ds.edges, data[1], data[2], dfde=True)
+        self.solution = Spectrum(self.ds.edges, data[1][:-1], data[2][:-1], dfde=True)
 
     def plotSpectra(self, name='generic', clear=True, ds=True):
         plt.figure(0)
