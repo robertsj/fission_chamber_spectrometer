@@ -36,7 +36,8 @@ def unfold_umg(R, RF, ds, ts, eb, isos, name, program):
     U.run(name)
     # plotit(U, ts, name)
     shutil.rmtree('inp')
-    return U.solution, 100 * abs(U.solution.values - ts.values) / ts.values
+    os.system('rm ' + data_path + '{}_unfolded.txt'.format(name))
+    return U, 100 * abs(U.solution.values - ts.values) / ts.values, ts
 
 
 def plotit(U, ts, name):
@@ -70,8 +71,6 @@ def plotit(U, ts, name):
     ax.plot(x, y, color='k', marker='o')
     fig.savefig(plot_path + name + '_comp.pdf')
     plt.close(fig)
-
-    os.system('rm ' + data_path + '{}_unfolded.txt'.format(name))
 
 
 def bin_flux(flux, struct):
@@ -122,7 +121,7 @@ for struct in structs:
     ds_low = Spectrum(eb, ds_pwr * 0.5)
     ds_hi = Spectrum(eb, ds_pwr * 2)
     ds_on = Spectrum(eb, ds_pwr)
-    ds_ones = Spectrum(eb, ds_pwr * 0 + 1)
+    ds_ones = Spectrum(eb, ds_pwr * 0 + (1 / len(eb)))
     default_spectra = {'hi': ds_hi,
                        'low': ds_low,
                        'on': ds_on,
