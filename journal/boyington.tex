@@ -402,7 +402,7 @@
 % not capitalized unless they are the first or last word of the title.
 % Linebreaks \\ can be used within to get better formatting as desired.
 % Do not put math or special symbols in the title.
-\title{On Use of Multi-Chambered Fission Detectors \\for In-Core, Neutron Spectroscopy}
+\title{Application of MAXED and Gravel Unfolding Methods to In-Core, Fission Chamber, Neutron Spectrometry}
 
 \author{John Boyington% <-this % stops a space
 \thanks{J. Boyington is with the Department
@@ -529,6 +529,13 @@ I will give a brief description of Gravel here, making sure to include the actua
 
 \section{Methods}
 
+\begin{figure}[h!tb]
+  \centering
+  \includegraphics[width = 0.49\textwidth]{../plot/umg_ds_gr}
+  \caption{The default spectra used in unfolding.}
+  \label{fig:default_spectra}
+\end{figure}
+
 A range of fissionable isotopes are theoretically available for use in the mpfds and so various isotopic groupings, found in a table that I will add soon, were studied.
 Because both of these algorithms require the use of a default spectrum, the interest in an analysis of this problem comes from the ability of the algorithms to recieve some typical flux spectrum and accurately reproduce a true flux spectrum.
 An MCNP simulation was used to produce a representative flux spectrum for the KSU Triga Mark II research reactor and then detector responses were obtained by folding this flux vector with the isotopic cross sections as found in the above equation.
@@ -537,13 +544,140 @@ Three of the default spectra were textbook PWR flux spectra with different magni
 One was scaled to identical integrated flux as the true, TRIGA spectrum, the other two were multiplied by a scaling coefficient of 0.5 and 2.0, representing the theoretical range of mis-guessing the TRIGA's true absolute flux.
 The other, uniquely-shaped spectrum was obtained by setting each bin's integrated flux to unity then scaling the overall flux to match that of the true spectrum.
 
+\begin{table*}[h]
+\centering
+\begin{tabular}{ |c|c| }
+ \hline
+ \textbf{Case} & \textbf{Included Isotopes} \\
+ \hline
+ Case 1 & ${}^{235}$U, ${}^{238}$U, and ${}^{232}$Th \\
+ \hline
+ Case 2 & Case 1 + ${}^{237}$Np and ${}^{238}$Pu \\
+ \hline
+ Case 3 & Case 2 + ${}^{239}$Pu, ${}^{240}$Pu, and ${}^{241}$Pu \\
+ \hline
+ Case 4 & Case 3 + ${}^{233}$U, ${}^{234}$U, ${}^{238}$Pu, ${}^{242}$Pu, ${}^{241}$Am, ${}^{242m}$Am, ${}^{244}$Cm, and ${}^{245}$Cm \\
+ \hline
+ Case 5 & Case 3 + ${}^{233}$U${}^{113}$Cd, ${}^{235}$U${}^{113}$Cd, ${}^{238}$Pu${}^{113}$Cd, ${}^{239}$Pu${}^{113}$Cd, ${}^{241}$Pu${}^{113}$Cd \\
+ \hline
+ Case 6 & Case 3 + ${}^{233}$U${}^{155}$Gd, ${}^{235}$U${}^{155}$Gd, ${}^{238}$Pu${}^{155}$Gd, ${}^{239}$U${}^{155}$Gd, ${}^{241}$Pu${}^{155}$Gd \\
+ \hline
+ Case 7 & Case 3 + all Cd and Gd shielded isotopes. \\
+ \hline
+\end{tabular}
+\end{table*}
+
 
 \section{Results and Discussion}
 
-Check out these figures.
-Are they not the best figures you've ever seen.
-MAXED works better without the shielded responses, Gravel works better once you include them.
-Gravel also is less afraid to depart from the default spectrum in the 1/E region, so that's coolio.
+\subsection{Default Spectra}
+
+The unity spectrum stands out as the worst of the default spectra.
+The noisy behavior between groups 20 and 40 make it unreasonable for use as a solution spectrum.
+This is due in part to the group structure used.
+The variance in bin width across the Wims 69 group structure forms peak behavior in this region when producing a unity spectrum that translates to inaccuracies in the unfolding process.
+It is conceivable, then, that a structure with more uniformity across the spectrum might correlate to a smoother solution spectrum.
+
+A second, obvious feature within the Gravel results in (figure) is the indifference to starting total flux, given an identical flux spectrum.
+This contrasts with MAXED's clear dependence on integral flux, exibiting it's lowest average error for the low flux spectrum.
+Another feature of interest is MAXED's adherence to the default spectra's through the region bounded by approximately $10^{-3}$ and $5 \times 10^{-1}$.
+The maximum entropy principle discourages deviation from the default spectrum, and therefore is likely to exibit a consistent and unfavorable bias throughout this region for a wide range of default spectra.
+Gravel appears superior at eliminating this issue.
+
+Although trouble for the unity spectrum, all default spectra struggle to match the true spectrum within groups 20 through 40.
+The low flux spectrum combined with MAXED outperforms any other combination within this section of analysis, highlighting the importance of default spectrum selection.
+
+
+\begin{figure}[h!tb]
+  \centering
+  \includegraphics[width = 0.49\textwidth]{../plot/umg_ds_sol_gr}
+  \caption{The solutions provided by Gravel given the varied default spectra.}
+  \label{fig:ds_sol_gr}
+\end{figure}
+
+\begin{figure}[h!tb]
+  \centering
+  \includegraphics[width = 0.49\textwidth]{../plot/umg_ds_sol_err_gr}
+  \caption{The group-wise error produced by Gravel given the varied default spectra.}
+  \label{fig:ds_err_gr}
+\end{figure}
+
+\begin{figure}[h!tb]
+  \centering
+  \includegraphics[width = 0.49\textwidth]{../plot/umg_ds_sol_mx}
+  \caption{The solutions provided by MAXED given the varied default spectra.}
+  \label{fig:ds_sol_mx}
+\end{figure}
+
+\begin{figure}[h!tb]
+  \centering
+  \includegraphics[width = 0.49\textwidth]{../plot/umg_ds_sol_err_mx}
+  \caption{The group-wise error produced by MAXED given the varied default spectra.}
+  \label{fig:ds_err_mx}
+\end{figure}
+
+
+\subsection{Isotopic Groups}
+
+
+
+\begin{figure}[h!tb]
+  \centering
+  \includegraphics[width = 0.49\textwidth]{../plot/umg_isos_gr}
+  \caption{The solutions provided by Gravel given the varied isotopic cases.}
+  \label{fig:isos_gr}
+\end{figure}
+
+\begin{figure}[h!tb]
+  \centering
+  \includegraphics[width = 0.49\textwidth]{../plot/umg_isos_err_gr}
+  \caption{The group-wise error produced by Gravel given the varied isotopic cases.}
+  \label{fig:isos_err_gr}
+\end{figure}
+
+\begin{figure}[h!tb]
+  \centering
+  \includegraphics[width = 0.49\textwidth]{../plot/umg_isos_mx}
+  \caption{The solutions provided by MAXED given the varied  isotopic cases.}
+  \label{fig:isos_mx}
+\end{figure}
+
+\begin{figure}[h!tb]
+  \centering
+  \includegraphics[width = 0.49\textwidth]{../plot/umg_isos_err_mx}
+  \caption{The group-wise error produced by MAXED given the varied  isotopic cases.}
+  \label{fig:isos_err_mx}
+\end{figure}
+
+\subsection{Shielded Responses}
+
+\begin{figure}[h!tb]
+  \centering
+  \includegraphics[width = 0.49\textwidth]{../plot/umg_shielded_gr}
+  \caption{The solutions provided by Gravel given the varied isotopic cases, including the shielded responses.}
+  \label{fig:shielded_gr}
+\end{figure}
+
+\begin{figure}[h!tb]
+  \centering
+  \includegraphics[width = 0.49\textwidth]{../plot/umg_shielded_err_gr}
+  \caption{The group-wise error produced by Gravel given the varied isotopic cases, including the shielded responses.}
+  \label{fig:shielded_err_gr}
+\end{figure}
+
+\begin{figure}[h!tb]
+  \centering
+  \includegraphics[width = 0.49\textwidth]{../plot/umg_shielded_mx}
+  \caption{The solutions provided by MAXED given the varied isotopic cases, including the shielded responses.}
+  \label{fig:shielded_mx}
+\end{figure}
+
+\begin{figure}[h!tb]
+  \centering
+  \includegraphics[width = 0.49\textwidth]{../plot/umg_shielded_err_mx}
+  \caption{The group-wise error produced by MAXED given the varied isotopic cases, including the shielded responses.}
+  \label{fig:shielded_err_mx}
+\end{figure}
 
 \section{Conclusion}
 
