@@ -1,0 +1,2 @@
+pdflatex boyington.tex
+rm *.out *.aux *.log
