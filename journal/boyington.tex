@@ -504,18 +504,50 @@ Specifically, the underdetermined problem of spectral deconvolution caused by bo
 \section{Spectral Deconvolution}
 
 Spectral deconvolution, also known as spectral unfolding, is a problem commonly found within neutron spectrometry.
+It arises in part by the desire to produces a high resolution representation of the neutron flux spectrum featuring detail in special regions.
+The equation governing the process is expressed as follows:
+
+\begin{equation}
+  r_i = \sum_{g=1}^{N} \Sigma_{fg,i}  \phi_g\, , 
+    \qquad i = 1 \ldots N \, ,
+\label{eq:response}
+\end{equation}
+
+where each symbol represents what it does.
+The knowns in this equation are the responses $r_i$ and the response functions $\Sigma_{fg,i}$, which, in this case are simply the macroscpoic cross sections of each fissionable isotope.
+Deconvolution is the process that obtains the flux.
+
+Many different methods of deconvolution have been proposed, having varying levels of success, which is often application-dependent.
+Two popular methods used in similar applications to this are included in the RSICC Peripheral Science Routine Collection, namely, MAXED and Gravel.
+
+MAXED, arguably the more sophisticated of the two finds its basis in information theory and leverages the principle of maximum entropy.
+It seeks to solve a system of equations and its closed form representation also allows the user to obtain error associated with the solution.
+I will give a brief description of MAXED here.
+
+Gravel, which employs a modified version of the Sand II algorithm has been broadly applied in nuclear engineering since its conception in whenever the air force came up with it.
+I will give a brief description of Gravel here, making sure to include the actual algorithm.
 
 \section{Methods}
 
-Methods go here.
+A range of fissionable isotopes are theoretically available for use in the mpfds and so various isotopic groupings, found in a table that I will add soon, were studied.
+Because both of these algorithms require the use of a default spectrum, the interest in an analysis of this problem comes from the ability of the algorithms to recieve some typical flux spectrum and accurately reproduce a true flux spectrum.
+An MCNP simulation was used to produce a representative flux spectrum for the KSU Triga Mark II research reactor and then detector responses were obtained by folding this flux vector with the isotopic cross sections as found in the above equation.
+Then, using four unique default spectra shown in a figure, both unfolding methods were applied to each isotopic set and solution flux spectra were obtained.
+Three of the default spectra were textbook PWR flux spectra with different magnitudes.
+One was scaled to identical integrated flux as the true, TRIGA spectrum, the other two were multiplied by a scaling coefficient of 0.5 and 2.0, representing the theoretical range of mis-guessing the TRIGA's true absolute flux.
+The other, uniquely-shaped spectrum was obtained by setting each bin's integrated flux to unity then scaling the overall flux to match that of the true spectrum.
+
 
 \section{Results and Discussion}
 
-Results go here.
+Check out these figures.
+Are they not the best figures you've ever seen.
+MAXED works better without the shielded responses, Gravel works better once you include them.
+Gravel also is less afraid to depart from the default spectrum in the 1/E region, so that's coolio.
 
 \section{Conclusion}
 
-Conclusions go here.
+These are the best we got.
 
  
 % use section* for acknowledgment
