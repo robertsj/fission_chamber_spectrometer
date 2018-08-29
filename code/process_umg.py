@@ -200,6 +200,6 @@ def make_shielded_plot(umg_data, pgm):
     fig.clf()
 
 for pgm in ['mx', 'gr']:
-    #make_ds_plot(umg_data, pgm)
-    #make_isos_plot(umg_data, pgm)
+    make_ds_plot(umg_data, pgm)
+    make_isos_plot(umg_data, pgm)
     make_shielded_plot(umg_data, pgm)
