@@ -1,0 +1,45 @@
+\documentclass[a4paper, 11pt]{article}
+\usepackage{comment} % enables the use of multi-line comments (\ifx \fi) 
+\usepackage{fullpage} % changes the margin
+\usepackage{graphicx}
+\usepackage{subfig}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+}
+
+\begin{document}
+\thispagestyle{empty}
+%Header-Make sure you update this information!!!!
+\noindent
+\large\textbf{Summary of Xiong et. al.} \\
+\hfill John Boyington \\
+\hfill Kansas State University \\
+
+\vspace{0.02\textheight}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                       Procedures
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Detailed in this report is the application of MAXED's unfolding algorithm to a fast reactor spectrum.
+The first few sections provide a brief explanation of different applications that use unfolding (bonner spheres, foil activation, etc.) and then a simple review of the math involved in unfolding.
+Briefly described is the specifications of three miniature ionizations chambers that employ ${}^{235}U$, ${}^{238}U$, and Cd covered ${}^{Nat}B$, limiting the analysis to 3 responses.
+SuperMC, a Monte Carlo code was used to generate the response functions, which are presented in the report in a 187 group structure.
+The isotopes were chosen to give regions of high response in the thermal, 1/E and fast regions of the spectrum.
+
+Responses were then generated using an IAEA fast reactor spectrum; however, unfortunately, there's no real detail explaining exactly how this was done.
+It could be possible that the spectrum was just folded with the response functions, but later when it's used as a default spectrum, this should lead to uninteresting results.
+It is possible instead that SuperMC was used to generate the responses using this spectrum as a source.
+The only errors reported are in relation to these responses or `normalized count rates', described as being $<$2\%.
+The unfolding done is this way provides a close match with the starting spectrum, with a maximum group deviation of ~15\%.
+
+Then, responses were calculated for 3 different positions in the China LEAd-based Reactor (CLEAR) lead-cooled fast reactor.
+Unfolding was done using the original IAEA spectrum as the default spectrum and maximum groupwise error, deviation of $E_{avg}$, and deviation of $\phi_{f}/\phi_{tot}$ were presented in a table within the report.
+
+\end{document}
+
