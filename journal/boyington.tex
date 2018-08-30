@@ -465,12 +465,14 @@ KS, 66502 (email: mjcb@ksu.edu).}
 % As a general rule, do not put math, special symbols or citations
 % in the abstract or keywords.
 \begin{abstract}
-Abstract goes here.
+Unfolding codes MAXED and Gravel are applied to the theoretical problem of in-core, multi-isotope, fission chamber detectors.
+This includes a study of the variation of default spectra, as well as analysis of different isotopic groupings, including Cd and Gd shielded isotopes.
+The analysis demonstrates an overall improvement on the group-wise and mean absolute errors compared with other unfolding methods, the best case showing a mean, group-wise error of 18.5\%.
 \end{abstract}
 
 % Note that keywords are not normally used for peerreview papers.
 \begin{IEEEkeywords}
-neutron spectroscopy, fission chambers, maximum entropy
+neutron spectroscopy, fission chambers, maxed, gravel
 \end{IEEEkeywords}
 
 
@@ -512,7 +514,7 @@ The equation governing the process, when represented as a summation, is expresse
 \label{eq:response}
 \end{equation}
 
-where each $r_i$ is the response of isotope $i$, $\epsilon_i$ is the error associated with $r_i$, $\Sigma_{fg,i}$ is the flux-weighted, integrate fission cross section for energy group $g$ for isotope $i$, and $\phi_g$ is the integrated flux in energy group $g$.
+where each $r_i$ is the response of isotope $i$, $\epsilon_i$ is the error associated with $r_i$, $\Sigma_{fg,i}$ is the flux-weighted, integrated fission cross section for energy group $g$ for isotope $i$, and $\phi_g$ is the integrated flux in energy group $g$.
 Known in this equation are the responses $r_i$, obtained from detector measurements, and assumed is the matrix $\Sigma$.
 It is assumed because to flux-weight the cross section requires {\it a priori} knowledge of the true flux spectrum, the obtention of which is the goal of our work here.
 Deconvolution refers to the class of methods used to obtain the flux vector.
@@ -607,9 +609,9 @@ This is due in part to the group structure used.
 The variance in bin width across the Wims 69 group structure forms peak behavior in this region when producing a unity spectrum that translates to inaccuracies in the unfolding process.
 It is conceivable, then, that a structure with more uniformity across the spectrum might correlate to a smoother solution spectrum.
 
-A second, obvious feature within the Gravel results in \FIG{fig:ds_sol_gr} is the indifference to starting total flux, given an identical flux spectrum.
+A second, obvious feature within the Gravel results in \FIG{fig:ds_sol_gr} is the indifference to starting total flux, given an identical flux spectral shape.
 This contrasts with MAXED's clear dependence on integral flux, exibiting it's lowest average error for the low flux spectrum.
-Another feature of interest is MAXED's adherence to the default spectra through the region bounded by approximately $10^{-3}$ and $5 \times 10^{-1}$.
+Another feature of interest is MAXED's adherence to the default spectra through the region bounded by approximately $1 \times 10^{-3}$ and $5 \times 10^{-1}$ MeV.
 The maximum entropy principle discourages deviation from the default spectrum, and therefore is likely to exibit a consistent and unfavorable bias throughout this region for a wide range of default spectra.
 
 Although trouble for the unity spectrum, all default spectra struggle to match the true spectrum within groups 20 through 40.
@@ -649,12 +651,12 @@ The low flux spectrum combined with MAXED outperforms any other combination with
 
 For the subsequent analysis, the `same flux' spectrum was used as the default spectrum.
 For both programs, the addition of more responses generally leads to a decrease in the group-wise mean error.
-However, when the neptunium and thorium resonses are included in the analysis, case 2 actually leads to an increase in error, visible in \FIG{fig:isos_err_gr} and \FIG{isos_err_mx}.
+However, when the neptunium and thorium resonses are included in the analysis, case 2 actually leads to an increase in error, visible in \FIG{fig:isos_err_gr} and \FIG{fig:isos_err_mx}.
 This is likely due to the additional element's energy region of highest response.
 They add a a degree of importance to capturing the detail in the lower end of the 1/E region and as a result, cause the erratic behavior while attempting to fix the solution spectrum.
 MAXED generally outperforms gravel for the few response cases.
 The matching along the entire 1/E region is better for MAXED, causing this outperformance.
-It should be noted, however, that Gravel exhibits a higher capacity to capture detail, at lease in these cases: error is virtually non-existent in the high-energy, fission spectrum end of the curve, and the curvature around the low-energy, maxwellian region is more extreme, to match the true spectrum.
+It should be noted, however, that Gravel exhibits a higher capacity to capture detail, at lease in these cases; error is virtually non-existent in the high-energy, fission spectrum end of the curve, and the curvature around the low-energy, maxwellian region is more extreme, to match the true spectrum.
 Restated, MAXED operates on a maximum entropy principle, so the spectrum is often less free than Gravel's to undergo more extreme shape changes in attempting to locate a solution spectrum.
 
 
@@ -723,9 +725,12 @@ For both programs, the Gd inclusion outperforms the Cd included responses, a pat
 
 
 
-\section{Conclusion}
+\section{Conclusion and Future Work}
 
-These are the best we got.
+The use of MAXED and Gravel unfolding codes has lead to the successful reduction in the absolute error associated with neutron spectral deconvolution, relative to other, simpler algorithms \cite{roberts2018use}.
+Small in scope, this study provides preliminary proof of the usefulness of these methods; however, a much larger analsis should ultimately be done to inform future descisions like the selection of ideal spatial-dependent default spectra, and optimum isotopic groupings.
+Also, this study by no means exhausts the realm of popular unfolding algorithms and there is room for the analysis of other codes within this same application.
+The ideas presented here apply to broad notions of multi-isotope, fission chamber detectors, and as the technology develops, constraints presented by the technology can be incorporated into analysis giving a more realistic idea of the potential for such devices.
 
  
 % use section* for acknowledgment
