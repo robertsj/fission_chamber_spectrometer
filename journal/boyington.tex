@@ -404,7 +404,7 @@
 % Do not put math or special symbols in the title.
 \title{Application of MAXED and Gravel Unfolding Methods to In-Core, Fission Chamber, Neutron Spectrometry}
 
-\author{John Boyington% <-this % stops a space
+\author{John Boyington, Jeremy Roberts% <-this % stops a space
 \thanks{J. Boyington is with the Department
 of Mechanical and Nuclear Engineering, Kansas State University, Manhattan,
 KS, 66502 (email: mjcb@ksu.edu).}
@@ -492,40 +492,69 @@ neutron spectroscopy, fission chambers, maximum entropy
 \section{Introduction}
 
 \IEEEPARstart{O}f interest to any reactor physicist is a high resolution, spatial, temporal, and spectral representation of the in-core neutron flux of any reactor.
-Within recent years, scientists have made many developments in fission chamber technology, achieving goals like the reduction of local flux perturbation and detectable responses across the range of integrated flux levels in the core.
-Amongst the newest/best of these designs is the mpfds designed at Kansas State Universtity alongside whoever else helped.
-Currently, these technologies only employ a single fission chamber at each location which allow for detection of the total flux.
-However, it's not hard to imagine the co-location of multiple chambers in the same nodal region, each containing a different fissionable isotope, providing many more, and ideally orthagonal, responses to the in-core spectral flux.
+Within recent years, scientists at Kansas State University have made many developments in fission chamber technology, achieving goals like the reduction of local flux perturbation, point-like detector geometry and extreme widening of the power band \cite{reichenberger2016micro} \cite{reichenberger2018fabrication}.
+Currently, these technologies, known as Micro-Pocket Fission Detectors, only employ a single fission chamber at each location which allow for detection of the total flux.
+However, one can imagine the co-location of multiple chambers in the same nodal region, each containing a unique fissionable isotope, providing many more, and ideally independent, responses to the in-core spectral flux.
 Although useful, there exist limitations on the ammount of information that can be extracted from a neutron signal using an increased number of fission chambers.
-Geometric constraints and isotopic availability and manufacturing prevent exist as two major limitations.
-The problem considered in this particular work deal with the transformation of response data into the spectral neutron flux.
-Specifically, the underdetermined problem of spectral deconvolution caused by both the uncertainty in the responses and the fact that the desired neutron spectrum flux vector will be larger than the associated reponses vector.
+Geometric constraints and isotopic availability and manufacturing exist as two major limitations.
+Another issue, the problem considered in this particular work, deals with the transformation of response data into the spectral neutron flux, specifically, the underdetermined problem of spectral deconvolution caused by both the uncertainty in the responses and the disparity between the response vector and the desired, larger neutron spectral flux vector.
+
 
 \section{Spectral Deconvolution}
 
 Spectral deconvolution, also known as spectral unfolding, is a problem commonly found within neutron spectrometry.
-It arises in part by the desire to produces a high resolution representation of the neutron flux spectrum featuring detail in special regions.
-The equation governing the process is expressed as follows:
+It arises in part by the desire to produces a high resolution representation of the neutron flux spectrum featuring useful detail in special regions.
+The equation governing the process, when represented as a summation, is expressed as follows:
 
 \begin{equation}
-  r_i = \sum_{g=1}^{N} \Sigma_{fg,i}  \phi_g\, , 
+  r_i + \epsilon_i = \sum_{g=1}^{N} \Sigma_{fg,i}  \phi_g\, , 
     \qquad i = 1 \ldots N \, ,
 \label{eq:response}
 \end{equation}
 
-where each symbol represents what it does.
-The knowns in this equation are the responses $r_i$ and the response functions $\Sigma_{fg,i}$, which, in this case are simply the macroscpoic cross sections of each fissionable isotope.
-Deconvolution is the process that obtains the flux.
+where each $r_i$ is the response of isotope $i$, $\epsilon_i$ is the error associated with $r_i$, $\Sigma_{fg,i}$ is the flux-weighted, integrate fission cross section for energy group $g$ for isotope $i$, and $\phi_g$ is the integrated flux in energy group $g$.
+Known in this equation are the responses $r_i$, obtained from detector measurements, and assumed is the matrix $\Sigma$.
+It is assumed because to flux-weight the cross section requires {\it a priori} knowledge of the true flux spectrum, the obtention of which is the goal of our work here.
+Deconvolution refers to the class of methods used to obtain the flux vector.
 
-Many different methods of deconvolution have been proposed, having varying levels of success, which is often application-dependent.
+Many different methods of deconvolution have been studied and shown to have varying levels of largely application-dependent success.
 Two popular methods used in similar applications to this are included in the RSICC Peripheral Science Routine Collection, namely, MAXED and Gravel.
 
-MAXED, arguably the more sophisticated of the two finds its basis in information theory and leverages the principle of maximum entropy.
-It seeks to solve a system of equations and its closed form representation also allows the user to obtain error associated with the solution.
-I will give a brief description of MAXED here.
+MAXED, arguably the more sophisticated of the two finds its basis in information theory and leverages the principle of maximum entropy \cite{reginatto1999maxed}.
+It seeks to solve a system of equations comprised of \EQ{eq:response} and \EQ{eq:omega} while maximizing \EQ{eq:entropy}
 
-Gravel, which employs a modified version of the Sand II algorithm has been broadly applied in nuclear engineering since its conception in whenever the air force came up with it.
-I will give a brief description of Gravel here, making sure to include the actual algorithm.
+\begin{equation}
+  \sum \frac{\epsilon_i^2}{\sigma_k^2} = \Omega
+\label{eq:omega}
+\end{equation}
+
+\begin{equation}
+  S = - \sum [f_i \ln(f_i/f_i^{DEF}) + f_i^{DEF} - f_i]
+\label{eq:entropy}
+\end{equation}
+
+This maximization of $S$ is done through use of simulated annealing and detailed in Reginatto and Goldhagen \cite{reginatto1999maxed}.
+The closed form solution allows for the propogation of uncertainty, a feature not available in other, iterative-type deconvolution methods.
+
+Gravel employs a modified version of the Sand II algorithm which was first detailed in a 1967 report from the Air Force Weapons Laboratory \cite{mcelroy1967computer}.
+The following equation describes the (relatively simple) algorithm:
+
+\begin{equation}
+ f_i^{J+1} = f_i^{J} \exp(\frac{\sum_k W_{ik}^J \log(\frac{N_k}{\sum_{i'} R_{ki'}f_{i'}^J})}{\sum_k W_{ik}^J}) 
+\label{eq:sand}
+\end{equation}
+
+where $N_k$ is the measured response, $\sigma_k$ is the measurement error, $R_{ki}$ is the response matrix, and $W_{ik}^J$ is a weighting term:
+
+\begin{equation}
+ W_{ik}^J = \frac{R_{ki} f_i^J}{\sum_{i'} f_{i'}^J} \frac{N_k^2}{\sigma_k^2} 
+\label{eq:weighting}
+\end{equation}
+
+$J$ represents the current iteration, $i$ is the energy group index, and $k$ is the response index.
+Because there is no closed form solution to the algorithm, uncertainty propagation is not possible here \cite{reginatto2004umg}.
+
+
 
 \section{Methods}
 
@@ -536,17 +565,18 @@ I will give a brief description of Gravel here, making sure to include the actua
   \label{fig:default_spectra}
 \end{figure}
 
-A range of fissionable isotopes are theoretically available for use in the mpfds and so various isotopic groupings, found in a table that I will add soon, were studied.
+A range of fissionable isotopes are theoretically available for use in fission chambers and so various isotopic groupings, found in a \TAB{tab:isos}, unfolding was performed.
 Because both of these algorithms require the use of a default spectrum, the interest in an analysis of this problem comes from the ability of the algorithms to recieve some typical flux spectrum and accurately reproduce a true flux spectrum.
-An MCNP simulation was used to produce a representative flux spectrum for the KSU Triga Mark II research reactor and then detector responses were obtained by folding this flux vector with the isotopic cross sections as found in the above equation.
-Then, using four unique default spectra shown in a figure, both unfolding methods were applied to each isotopic set and solution flux spectra were obtained.
+An MCNP simulation was used to produce a representative flux spectrum for the KSU Triga Mark II research reactor and then detector responses were obtained by folding (integrating) this flux with the isotopic cross sections as found in the above equation.
+Then, using four unique default spectra shown in \FIG{fig:default_spectra}, both unfolding methods were applied to each isotopic set and solution flux spectra were obtained.
 Three of the default spectra were textbook PWR flux spectra with different magnitudes.
-One was scaled to identical integrated flux as the true, TRIGA spectrum, the other two were multiplied by a scaling coefficient of 0.5 and 2.0, representing the theoretical range of mis-guessing the TRIGA's true absolute flux.
+One was scaled to identical integrated flux as the true, TRIGA spectrum, the other two were multiplied by a scaling coefficient of 0.5 or 2.0, representing the theoretical range of mis-guessing the TRIGA's true absolute flux.
 The other, uniquely-shaped spectrum was obtained by setting each bin's integrated flux to unity then scaling the overall flux to match that of the true spectrum.
+The Wims69 group structure was used for this analysis.
 
 \begin{table*}[h]
 \centering
-\begin{tabular}{ |c|c| }
+\begin{tabular}{ |c|c| } \label{tab:isos}
  \hline
  \textbf{Case} & \textbf{Included Isotopes} \\
  \hline
@@ -572,17 +602,15 @@ The other, uniquely-shaped spectrum was obtained by setting each bin's integrate
 
 \subsection{Default Spectra}
 
-The unity spectrum stands out as the worst of the default spectra.
-The noisy behavior between groups 20 and 40 make it unreasonable for use as a solution spectrum.
+The unity spectrum stands out as the worst of the default spectra, exhibiting very noisy behavior between groups 20 and 40 and thus make it least useful for use to find a solution spectrum.
 This is due in part to the group structure used.
 The variance in bin width across the Wims 69 group structure forms peak behavior in this region when producing a unity spectrum that translates to inaccuracies in the unfolding process.
 It is conceivable, then, that a structure with more uniformity across the spectrum might correlate to a smoother solution spectrum.
 
-A second, obvious feature within the Gravel results in (figure) is the indifference to starting total flux, given an identical flux spectrum.
+A second, obvious feature within the Gravel results in \FIG{fig:ds_sol_gr} is the indifference to starting total flux, given an identical flux spectrum.
 This contrasts with MAXED's clear dependence on integral flux, exibiting it's lowest average error for the low flux spectrum.
-Another feature of interest is MAXED's adherence to the default spectra's through the region bounded by approximately $10^{-3}$ and $5 \times 10^{-1}$.
+Another feature of interest is MAXED's adherence to the default spectra through the region bounded by approximately $10^{-3}$ and $5 \times 10^{-1}$.
 The maximum entropy principle discourages deviation from the default spectrum, and therefore is likely to exibit a consistent and unfavorable bias throughout this region for a wide range of default spectra.
-Gravel appears superior at eliminating this issue.
 
 Although trouble for the unity spectrum, all default spectra struggle to match the true spectrum within groups 20 through 40.
 The low flux spectrum combined with MAXED outperforms any other combination within this section of analysis, highlighting the importance of default spectrum selection.
@@ -621,14 +649,13 @@ The low flux spectrum combined with MAXED outperforms any other combination with
 
 For the subsequent analysis, the `same flux' spectrum was used as the default spectrum.
 For both programs, the addition of more responses generally leads to a decrease in the group-wise mean error.
-However, when the neptunium and thorium resonses are included in the analysis, case 2 actually leads to an increase in error, visible in (figure).
-This is likely due to the additional element's regions of response.
-They add a a degree of importance to capturing the detail in the lower end of the 1/E region and as a result, cause the erratic behavior.
+However, when the neptunium and thorium resonses are included in the analysis, case 2 actually leads to an increase in error, visible in \FIG{fig:isos_err_gr} and \FIG{isos_err_mx}.
+This is likely due to the additional element's energy region of highest response.
+They add a a degree of importance to capturing the detail in the lower end of the 1/E region and as a result, cause the erratic behavior while attempting to fix the solution spectrum.
 MAXED generally outperforms gravel for the few response cases.
 The matching along the entire 1/E region is better for MAXED, causing this outperformance.
-It should be noted, however, that in gravel's exhibits a higher capacity to capture detail, at lease in these cases.
-Error is virtually non-existant in the high-energy, fission spectrum end of the curve, and the curvature around the low-energy, maxwellian region is more extreme, to match the true spectrum.
-Again, MAXED operates on a maximum entropy principle, so is less free than gravel to cause more extreme shape changes in attempting to locate a solution spectrum.
+It should be noted, however, that Gravel exhibits a higher capacity to capture detail, at lease in these cases: error is virtually non-existent in the high-energy, fission spectrum end of the curve, and the curvature around the low-energy, maxwellian region is more extreme, to match the true spectrum.
+Restated, MAXED operates on a maximum entropy principle, so the spectrum is often less free than Gravel's to undergo more extreme shape changes in attempting to locate a solution spectrum.
 
 
 
@@ -664,7 +691,7 @@ Again, MAXED operates on a maximum entropy principle, so is less free than grave
 
 It is with the inclusion of shielded responses that Gravel really begins to exhibit its usefulness.
 Both programs continue to find improved spectra given additional repsponses, culminating in a value of 18.5\% by Gravel including the Cd and Gd responses.
-For both programs, the Gd inclusion outperforms the Cd included responses, a pattern which does not hold true for other unfolding techniques (cite roberts).
+For both programs, the Gd inclusion outperforms the Cd included responses, a pattern which does not hold true for other unfolding techniques \cite{roberts2018use}.
 
 \begin{figure}[h!tb]
   \centering
@@ -694,15 +721,17 @@ For both programs, the Gd inclusion outperforms the Cd included responses, a pat
   \label{fig:shielded_err_mx}
 \end{figure}
 
+
+
 \section{Conclusion}
 
 These are the best we got.
 
  
 % use section* for acknowledgment
-\section*{Acknowledgment}
+%\section*{Acknowledgment}
 
-Shoutout to my bros.
+%Shoutout to my bros.
 
 % Can use something like this to put references on a page
 % by themselves when using endfloat and the captionsoff option.
