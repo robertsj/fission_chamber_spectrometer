@@ -619,7 +619,16 @@ The low flux spectrum combined with MAXED outperforms any other combination with
 
 \subsection{Isotopic Groups}
 
-For both programs, the addition of 
+For the subsequent analysis, the `same flux' spectrum was used as the default spectrum.
+For both programs, the addition of more responses generally leads to a decrease in the group-wise mean error.
+However, when the neptunium and thorium resonses are included in the analysis, case 2 actually leads to an increase in error, visible in (figure).
+This is likely due to the additional element's regions of response.
+They add a a degree of importance to capturing the detail in the lower end of the 1/E region and as a result, cause the erratic behavior.
+MAXED generally outperforms gravel for the few response cases.
+The matching along the entire 1/E region is better for MAXED, causing this outperformance.
+It should be noted, however, that in gravel's exhibits a higher capacity to capture detail, at lease in these cases.
+Error is virtually non-existant in the high-energy, fission spectrum end of the curve, and the curvature around the low-energy, maxwellian region is more extreme, to match the true spectrum.
+Again, MAXED operates on a maximum entropy principle, so is less free than gravel to cause more extreme shape changes in attempting to locate a solution spectrum.
 
 
 
@@ -652,6 +661,10 @@ For both programs, the addition of
 \end{figure}
 
 \subsection{Shielded Responses}
+
+It is with the inclusion of shielded responses that Gravel really begins to exhibit its usefulness.
+Both programs continue to find improved spectra given additional repsponses, culminating in a value of 18.5\% by Gravel including the Cd and Gd responses.
+For both programs, the Gd inclusion outperforms the Cd included responses, a pattern which does not hold true for other unfolding techniques (cite roberts).
 
 \begin{figure}[h!tb]
   \centering
