@@ -467,7 +467,7 @@ KS, 66502 (email: mjcb@ksu.edu).}
 \begin{abstract}
 Unfolding codes MAXED and Gravel are applied to the theoretical problem of in-core, multi-isotope, fission chamber detectors.
 This includes a study of the variation of default spectra, as well as analysis of different isotopic groupings, including Cd and Gd shielded isotopes.
-The analysis demonstrates an overall improvement on the group-wise and mean absolute errors compared with other unfolding methods, the best case showing a mean, group-wise error of 18.5\%.
+The analysis demonstrates an overall improvement on the group-wise and mean absolute errors compared with other, previously studied unfolding methods, the best case showing a mean, group-wise error of 18.5\%.
 \end{abstract}
 
 % Note that keywords are not normally used for peerreview papers.
@@ -500,6 +500,9 @@ However, one can imagine the co-location of multiple chambers in the same nodal 
 Although useful, there exist limitations on the ammount of information that can be extracted from a neutron signal using an increased number of fission chambers.
 Geometric constraints and isotopic availability and manufacturing exist as two major limitations.
 Another issue, the problem considered in this particular work, deals with the transformation of response data into the spectral neutron flux, specifically, the underdetermined problem of spectral deconvolution caused by both the uncertainty in the responses and the disparity between the response vector and the desired, larger neutron spectral flux vector.
+Previously, a scoping study was completed demonstrating the performance of three deconvolution algorithms on this specific problem: minimum-norm, Tihkonov regularization, and maximum Shannon entropy unfolding \cite{roberts2018use}.
+These algorithms serve as a starting point for approaching this problem; however, they each present certain pathologies that motivate the search for better performing methods.
+The deconvolution algorithms MAXED and Gravel are two approaches presented in this work that address these specific issues and improve the overal error associated with the deconvoluted solution.
 
 
 \section{Spectral Deconvolution}
@@ -535,6 +538,8 @@ It seeks to solve a system of equations comprised of \EQ{eq:response} and \EQ{eq
 \label{eq:entropy}
 \end{equation}
 
+In the above equations, $\Omega$ is a user-defined parameter that relates the unknown error $\epsilon_i$ to an assumed variance in response $\sigma_k^2$.
+$S$ is the entropy we are trying to maximize, and $f_i^{DEF}$ is the default starting spectrum.
 This maximization of $S$ is done through use of simulated annealing and detailed in Reginatto and Goldhagen \cite{reginatto1999maxed}.
 The closed form solution allows for the propogation of uncertainty, a feature not available in other, iterative-type deconvolution methods.
 
@@ -567,7 +572,9 @@ Because there is no closed form solution to the algorithm, uncertainty propagati
   \label{fig:default_spectra}
 \end{figure}
 
-A range of fissionable isotopes are theoretically available for use in fission chambers and so various isotopic groupings, found in a \TAB{tab:isos}, unfolding was performed.
+A range of fissionable isotopes are theoretically available for use in fission chambers and so for various isotopic groupings, found in a \TAB{tab:isos}, unfolding was performed.
+The response matrices used in unfolding were comprised of the condensed microscopic, fission cross sections for each of these groupings, which are shown in \FIG{fig:response}.
+Not depicted in the figure are the shielded responses which were obtained via elementary approximation - that thermal neutron attenuation by 0.025 mm foils of each weighted the response function.
 Because both of these algorithms require the use of a default spectrum, the interest in an analysis of this problem comes from the ability of the algorithms to recieve some typical flux spectrum and accurately reproduce a true flux spectrum.
 An MCNP simulation was used to produce a representative flux spectrum for the KSU Triga Mark II research reactor and then detector responses were obtained by folding (integrating) this flux with the isotopic cross sections as found in the above equation.
 Then, using four unique default spectra shown in \FIG{fig:default_spectra}, both unfolding methods were applied to each isotopic set and solution flux spectra were obtained.
@@ -575,6 +582,13 @@ Three of the default spectra were textbook PWR flux spectra with different magni
 One was scaled to identical integrated flux as the true, TRIGA spectrum, the other two were multiplied by a scaling coefficient of 0.5 or 2.0, representing the theoretical range of mis-guessing the TRIGA's true absolute flux.
 The other, uniquely-shaped spectrum was obtained by setting each bin's integrated flux to unity then scaling the overall flux to match that of the true spectrum.
 The Wims69 group structure was used for this analysis.
+
+\begin{figure}[h!tb]
+  \centering
+  \includegraphics[width = 0.49\textwidth]{../img/fission_responses.pdf}
+  \caption{Condensed microscropic, fission cross sections  in the WIMS 69-group format.}
+  \label{fig:response}
+\end{figure}
 
 \begin{table*}[h]
 \centering
@@ -728,6 +742,7 @@ For both programs, the Gd inclusion outperforms the Cd included responses, a pat
 \section{Conclusion and Future Work}
 
 The use of MAXED and Gravel unfolding codes has lead to the successful reduction in the absolute error associated with neutron spectral deconvolution, relative to other, simpler algorithms \cite{roberts2018use}.
+For example, a decrease in the theoretical minimum group-wise error for case 3 from 63\% to 53.9\% is seen in lieu of shielded responses through MAXED, dropping to 27.8\% when considering different default spectra and with the incorporation of shielded responses, a decrease from 34.2\% to 18.5\% using Gravel.
 Small in scope, this study provides preliminary proof of the usefulness of these methods; however, a much larger analsis should ultimately be done to inform future descisions like the selection of ideal spatial-dependent default spectra, and optimum isotopic groupings.
 Also, this study by no means exhausts the realm of popular unfolding algorithms and there is room for the analysis of other codes within this same application.
 The ideas presented here apply to broad notions of multi-isotope, fission chamber detectors, and as the technology develops, constraints presented by the technology can be incorporated into analysis giving a more realistic idea of the potential for such devices.
