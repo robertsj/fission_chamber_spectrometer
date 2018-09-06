@@ -18,4 +18,9 @@ clean:
 proceeding:
 	bash ./proceeding/makeit
 
+umg:
+	python ./code/unfold_umg.py
+	python ./code/process_umg.py
+	bash ./journal/makeit
+
 all: plots 

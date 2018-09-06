@@ -1,5 +1,11 @@
-directory = '/home/robertsj/Research/fission_chamber_spectrometer'
+directory = '/home/john/workspace/fission_chamber_spectrometer'
 img_directory = directory + '/img/'
+
+code_path = directory + '/code/'
+plot_path = directory + '/plot/'
+data_path = directory + '/data/'
+
+umg_path = '/home/john/opt/U_M_G/FC/bin/'
 
 isos = ['th232',
         'u233','u234','u235','u238',

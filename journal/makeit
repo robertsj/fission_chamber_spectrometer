@@ -1,0 +1,6 @@
+cd journal
+pdflatex boyington.tex
+bibtex boyington.aux
+pdflatex boyington.tex
+pdflatex boyington.tex
+rm *.out *.aux *.log
