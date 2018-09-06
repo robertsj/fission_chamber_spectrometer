@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.interpolate import interp1d
+from master_data import code_path
 
 
 def select_flux_spectrum(flux, power):
@@ -9,7 +10,7 @@ def select_flux_spectrum(flux, power):
     if 'triga' in flux and len(flux) == 6:
         port = flux[-1]
 
-        data = np.load('mpfd_nodal_data.npy')[()]
+        data = np.load(code_path + 'mpfd_nodal_data.npy')[()]
 
         nodal_spectra = [-1]
         for i in range(1, 5):
@@ -22,7 +23,7 @@ def select_flux_spectrum(flux, power):
         return nodal_spectra
 
     elif flux == 'triga_nebp':
-        data = np.load('nebp_data.npy')
+        data = np.load(code_path + 'nebp_data.npy')
         nodal_spectra = [-1]
         erg, values, err = data
         midpoints = (erg[1:] + erg[:-1]) / 2
