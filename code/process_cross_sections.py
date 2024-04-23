@@ -30,7 +30,7 @@ if __name__ == "__main__" :
     from master_data import isos, isos_str, isos_colors
     data = load_cross_sections(isos)
     interps = get_cross_section_interps(isos)
-    E = np.logspace(-5, np.log10(2e7), 1e5)
+    E = np.logspace(-5, np.log10(2e7), int(1e5))
     for iso in  isos :
         plt.loglog(E, interps[iso](E), label=isos_str[iso], color=isos_colors[iso])
     plt.legend(loc=0, ncol=4)

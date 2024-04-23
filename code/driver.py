@@ -3,7 +3,9 @@ from master_data import isos, isos_str, isos_colors
 from flux_spectrum import Flux
 from multigroup_utilities import plot_multigroup_data
 from response import generate_responses
+from process_cross_sections import *
 import numpy as np
+
 def plot_cross_sections() :
     data = load_cross_sections(isos)
     interps = get_cross_section_interps(isos)

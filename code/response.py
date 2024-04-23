@@ -18,7 +18,7 @@ def generate_responses(isos, flux, struct='wims69', lower=1e-5, upper=2e7,
     responses['eb'] = eb
     responses['phi'] = sp.zeros(len(eb)-1)
     for i in range(len(eb)-1) :
-        E = sp.logspace(sp.log10(eb[i+1]), sp.log10(eb[i]), 1e4)
+        E = sp.logspace(sp.log10(eb[i+1]), sp.log10(eb[i]), int(1e4))
         x = trapz(flux(E), E)
         print("->",i,eb[i+1], eb[i], x)
         responses['phi'][i] = trapz(flux(E), E)
@@ -30,7 +30,7 @@ def generate_responses(isos, flux, struct='wims69', lower=1e-5, upper=2e7,
         responses['response'][iso] = sp.zeros(len(eb)-1)
         fun = lambda x: flux(x)*interps[iso](x)
         for i in range(len(eb)-1) :
-            E = sp.logspace(sp.log10(eb[i+1]), sp.log10(eb[i]), 1e4)
+            E = sp.logspace(sp.log10(eb[i+1]), sp.log10(eb[i]), int(1e4))
             top = trapz(fun(E), E)
             responses['response'][iso][i] = top/responses['phi'][i]
     pickle.dump(responses, open(directory+'/code/'+name, 'wb'))

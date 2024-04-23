@@ -46,7 +46,7 @@ for iso in isos_th :
     # Load in the filter data
     E, sig = np.loadtxt(directory+'/data/'+iso+'.txt', skiprows=1, 
                         delimiter=',', unpack=True) 
-    EE = np.logspace(-5, np.log10(2e7), 1e4)
+    EE = np.logspace(-5, np.log10(2e7), int(1e4))
     isof = 'cd113'
     coef = -filt[isof]['numd']*filt[isof]['thick']
     sig_filt = np.interp(EE,E, sig) * \
@@ -65,7 +65,7 @@ for iso in isos_th :
     # Load in the filter data
     E, sig = np.loadtxt(directory+'/data/'+iso+'.txt', skiprows=1, 
                         delimiter=',', unpack=True) 
-    EE = np.logspace(-5, np.log10(2e7), 1e4)
+    EE = np.logspace(-5, np.log10(2e7), int(1e4))
     isof = 'gd155'
     coef = -filt[isof]['numd']*filt[isof]['thick']
     sig_filt = np.interp(EE,E, sig) * \
